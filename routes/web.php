@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
+use Laravel\Socialite\Facades\Socialite;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,6 +16,10 @@ Route::get('/login', function () {
 Route::get('/register', function () {
     return view('register');
 })->name('register');
+
+Route::get('/home', function () {
+    return view('home');
+})->name('home');
 
 
 Route::view('dashboard', 'dashboard')
@@ -38,4 +43,35 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
-});
+}
+
+
+
+
+);
+
+// Redirección a Google para iniciar sesión
+Route::get('/login-google', function () {
+    return Socialite::driver('google')->redirect();
+})->name('login.google');
+
+// Callback de Google: obtener información del usuario, crear/obtener usuario local y autenticación
+Route::get('/auth/google/callback', function () {
+    $googleUser = Socialite::driver('google')->user();
+
+    // Buscar por email
+    $user = \App\Models\User::where('email', $googleUser->getEmail())->first();
+
+    if (! $user) {
+        $user = \App\Models\User::create([
+            'name' => $googleUser->getName() ?? $googleUser->getNickname() ?? 'Usuario',
+            'email' => $googleUser->getEmail(),
+            // contraseña aleatoria (se almacenará hasheada gracias al cast en el modelo)
+            'password' => \Illuminate\Support\Str::random(24),
+        ]);
+    }
+
+    \Illuminate\Support\Facades\Auth::login($user, true);
+
+    return redirect()->intended(route('dashboard'));
+})->name('login.google.callback');

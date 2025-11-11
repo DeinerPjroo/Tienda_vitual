@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'google' => [
+        // Usa las variables de entorno: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT', env('APP_URL') . '/auth/google/callback'),
+    ],
+
 ];
