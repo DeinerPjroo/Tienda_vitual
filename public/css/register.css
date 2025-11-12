@@ -432,3 +432,15 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .logo {
+    text-align: left;
+    margin-bottom: 2rem;
+}
+
+.logo-image {
+    max-width: 180px;
+    height: auto;
+    display: block;
+    object-fit: contain; /* Asegura que la imagen mantenga sus proporciones */
+}

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - BeLuxe</title>
     <link rel="stylesheet" href="{{ asset('css/Login.css') }}">
-
 </head>
 <body>
     <div class="login-container">
@@ -20,8 +19,7 @@
 
         <div class="login-form-section">
             <div class="logo">
-                <div class="logo-icon">BL</div>
-                <span class="logo-text">BeLuxe</span>
+                <img src="{{ asset('images/beluxe-logo.png') }}" alt="BeLuxe Logo" class="logo-image">
             </div>
 
             <h1>Iniciar Sesión</h1>
