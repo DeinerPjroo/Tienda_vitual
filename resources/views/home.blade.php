@@ -10,10 +10,9 @@
     <!-- Header -->
     <header>
         <div class="header-content">
-            <a href="/" class="logo">
-                <div class="logo-icon">BL</div>
-                <span class="logo-text">BeLuxe</span>
-            </a>
+                <a href="/" class="logo">
+                <img src="{{ asset('images/beluxe-logo.png') }}" alt="BeLuxe Logo" class="logo-image">
+                </a>
 
             <nav>
                 <a href="/">Inicio</a>
