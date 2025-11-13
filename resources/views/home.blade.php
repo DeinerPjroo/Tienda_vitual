@@ -15,7 +15,7 @@
                 </a>
 
             <nav>
-                <a href="/">Inicio</a>
+                <a href="/home">Inicio</a>
                 <a href="/mujer">Mujer</a>
                 <a href="/hombre">Hombre</a>
                 <a href="/ninos">Niños</a>

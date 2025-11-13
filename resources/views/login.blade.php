@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - BeLuxe</title>
     <link rel="stylesheet" href="{{ asset('css/Login.css') }}">
+    
 </head>
 <body>
     <div class="login-container">
@@ -19,23 +20,40 @@
 
         <div class="login-form-section">
             <div class="logo">
-                <img src="{{ asset('images/beluxe-logo.png') }}" alt="BeLuxe Logo" class="logo-image">
+                <div class="logo-icon">BL</div>
+                <span class="logo-text">BeLuxe</span>
             </div>
 
             <h1>Iniciar Sesión</h1>
             <p>Ingresa tus credenciales para acceder a tu cuenta</p>
 
-            <!-- Este bloque mostraría errores de validación de Laravel -->
-            {{-- @if ($errors->any())
-            <div class="alert alert-error">
-                {{ $errors->first() }}
-            </div>
-            @endif --}}
+            <!-- Mensaje de éxito (después del registro) -->
+            @if (session('success'))
+                <div class="alert alert-success">
+                    <strong>✓ {{ session('success') }}</strong>
+                </div>
+            @endif
 
-            <form action="{{ route('login') }}" method="POST">
+            <!-- Mensajes de error generales -->
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    @if ($errors->has('error'))
+                        <strong>⚠️ {{ $errors->first('error') }}</strong>
+                    @else
+                        <strong>⚠️ Por favor verifica los siguientes errores:</strong>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>
+            @endif
+
+            <form action="{{ route('login.post') }}" method="POST">
                 @csrf
                 
-                <div class="form-group">
+                <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
                     <label for="email">Correo Electrónico</label>
                     <input 
                         type="email" 
@@ -44,10 +62,14 @@
                         placeholder="tu@email.com" 
                         value="{{ old('email') }}"
                         required
+                        autofocus
                     >
+                    @error('email')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
                 </div>
 
-                <div class="form-group">
+                <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">
                     <label for="password">Contraseña</label>
                     <input 
                         type="password" 
@@ -56,6 +78,9 @@
                         placeholder="••••••••" 
                         required
                     >
+                    @error('password')
+                        <span class="error-message">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="form-options">
@@ -63,7 +88,7 @@
                         <input type="checkbox" name="remember">
                         <span>Recuérdame</span>
                     </label>
-                    <a href="{{ route('password.request') }}" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
                 </div>
 
                 <button type="submit" class="btn-login">Iniciar Sesión</button>

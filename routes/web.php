@@ -1,27 +1,34 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\LoginController;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 use Laravel\Socialite\Facades\Socialite;
 
 Route::get('/', function () {
     return view('welcome');
-})->name('home');
+})->name('welcome');
 
-Route::get('/login', function () {
-    return view('login');
-})->name('login');
 
-Route::get('/register', function () {
-    return view('register');
-})->name('register');
+
 
 Route::get('/home', function () {
     return view('home');
 })->name('home');
 
 
+// RUTAS DE LOGIN
+Route::get('/login', [LoginController::class, 'showForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// RUTAS DE REGISTRO
+Route::get('/register', [RegisterController::class, 'showForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register'])->name('register.store');
+
+// Dashboard (solo para usuarios autenticados)
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
@@ -43,30 +50,22 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
-}
+});
 
-
-
-
-);
-
-// Redirección a Google para iniciar sesión
+// Google OAuth
 Route::get('/login-google', function () {
     return Socialite::driver('google')->redirect();
 })->name('login.google');
 
-// Callback de Google: obtener información del usuario, crear/obtener usuario local y autenticación
 Route::get('/auth/google/callback', function () {
     $googleUser = Socialite::driver('google')->user();
 
-    // Buscar por email
     $user = \App\Models\User::where('email', $googleUser->getEmail())->first();
 
     if (! $user) {
         $user = \App\Models\User::create([
             'name' => $googleUser->getName() ?? $googleUser->getNickname() ?? 'Usuario',
             'email' => $googleUser->getEmail(),
-            // contraseña aleatoria (se almacenará hasheada gracias al cast en el modelo)
             'password' => \Illuminate\Support\Str::random(24),
         ]);
     }
@@ -75,10 +74,3 @@ Route::get('/auth/google/callback', function () {
 
     return redirect()->intended(route('dashboard'));
 })->name('login.google.callback');
-
-
-
-use App\Http\Controllers\RegisterController;
-
-Route::get('/register', [RegisterController::class, 'showForm'])->name('register.form');
-Route::post('/register', [RegisterController::class, 'register'])->name('register');

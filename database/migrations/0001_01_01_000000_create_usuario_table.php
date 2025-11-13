@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('correo', 150)->unique();
             $table->string('password', 255);
             $table->string('telefono', 30)->nullable();
+            $table->date('fecha_nacimiento'); // ← FALTA ESTO
             $table->boolean('activo')->default(1);
             $table->timestamps();
         });
