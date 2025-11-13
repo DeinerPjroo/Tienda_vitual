@@ -14,9 +14,15 @@ Route::get('/', function () {
 
 
 
+
 Route::get('/home', function () {
     return view('home');
 })->name('home');
+
+// Ruta para la vista de Mujer
+Route::get('/mujer', function () {
+    return view('mujer');
+})->name('mujer');
 
 
 // RUTAS DE LOGIN
