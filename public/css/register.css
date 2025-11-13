@@ -168,13 +168,19 @@
         }
 
         .form-step {
-            display: none;
-        }
+    position: absolute;   /* Fuera del flujo */
+    opacity: 0;           /* Invisible */
+    pointer-events: none; /* No interactivo */
+    transition: all 0.3s ease;
+    width: 100%;
+}
 
-        .form-step.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
+.form-step.active {
+    position: relative;   /* Paso activo ocupa su lugar */
+    opacity: 1;
+    pointer-events: auto;
+}
+
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
