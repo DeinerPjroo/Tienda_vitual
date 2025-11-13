@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BeLuxe - Mujer</title>
+    <title>BeLuxe - Niños</title>
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/mujer.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/ninos.css') }}">
 </head>
 <body>
     <header>
@@ -16,9 +16,9 @@
 
             <nav>
                 <a href="{{ url('/home') }}">Inicio</a>
-                <a href="/mujer" class="active">Mujer</a>
+                <a href="/mujer">Mujer</a>
                 <a href="/hombre">Hombre</a>
-                <a href="/ninos">Niños</a>
+                <a href="/ninos" class="active">Niños</a>
                 <a href="/accesorios">Accesorios</a>
             </nav>
 
@@ -35,9 +35,9 @@
     </header>
 
     <div class="hero">
-        <h1>Moda para Mujer</h1>
-        <p>Descubre las últimas tendencias en ropa femenina. Vestidos elegantes, blusas modernas y más con increíbles descuentos.</p>
-        <button class="btn-primary">Explorar Ofertas Ahora</button>
+        <h1>Moda para Niños</h1>
+        <p>Ropa divertida, cómoda y colorida para los más pequeños. Encuentra conjuntos adorables, camisetas, zapatos y más con descuentos especiales.</p>
+        <button class="btn-primary">Explorar Ofertas Infantiles</button>
     </div>
 
     <div class="content-area">
@@ -47,16 +47,16 @@
                 <div class="filter-group">
                     <h3>Categoría ▼</h3>
                     <label class="filter-option">
-                        <input type="checkbox"> Vestidos
-                    </label>
-                    <label class="filter-option">
-                        <input type="checkbox"> Blusas
+                        <input type="checkbox"> Camisetas
                     </label>
                     <label class="filter-option">
                         <input type="checkbox"> Pantalones
                     </label>
                     <label class="filter-option">
-                        <input type="checkbox"> Faldas
+                        <input type="checkbox"> Conjuntos
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox"> Calzado
                     </label>
                 </div>
             </div>
@@ -71,13 +71,13 @@
         <div class="products-grid">
             <div class="product-card">
                 <button class="favorite-btn">♡</button>
-                <div class="product-image" style="background: linear-gradient(135deg, #ffd6e8 0%, #ffe8f0 100%);"></div>
+                <div class="product-image" style="background: linear-gradient(135deg, #ffe8a3 0%, #fff6d4 100%);"></div>
                 <div class="product-info">
-                    <div class="product-category">Vestidos</div>
-                    <div class="product-title">Vestido Rojo Elegante</div>
+                    <div class="product-category">Camisetas</div>
+                    <div class="product-title">Camiseta Dinosaurio</div>
                     <div class="product-price">
-                        <span class="price-current">$59.99</span>
-                        <span class="price-original">$89.99</span>
+                        <span class="price-current">$19.99</span>
+                        <span class="price-original">$29.99</span>
                         <span class="discount-badge">-33%</span>
                     </div>
                 </div>
@@ -85,10 +85,10 @@
 
             <div class="product-card">
                 <button class="favorite-btn">♡</button>
-                <div class="product-image" style="background: linear-gradient(135deg, #d4e4ff 0%, #e8f0ff 100%);"></div>
+                <div class="product-image" style="background: linear-gradient(135deg, #a3e4ff 0%, #d4f3ff 100%);"></div>
                 <div class="product-info">
-                    <div class="product-category">Blusas</div>
-                    <div class="product-title">Blusa Floral de Verano</div>
+                    <div class="product-category">Conjuntos</div>
+                    <div class="product-title">Conjunto Deportivo Azul</div>
                     <div class="product-price">
                         <span class="price-current">$34.99</span>
                         <span class="price-original">$54.99</span>
@@ -99,62 +99,62 @@
 
             <div class="product-card">
                 <button class="favorite-btn">♡</button>
-                <div class="product-image" style="background: linear-gradient(135deg, #fff4d6 0%, #fff9e8 100%);"></div>
+                <div class="product-image" style="background: linear-gradient(135deg, #ffd4f3 0%, #ffe8fa 100%);"></div>
                 <div class="product-info">
                     <div class="product-category">Pantalones</div>
-                    <div class="product-title">Jeans Mom Fit</div>
+                    <div class="product-title">Pantalón de Algodón Verde</div>
                     <div class="product-price">
-                        <span class="price-current">$49.99</span>
-                        <span class="price-original">$79.99</span>
-                        <span class="discount-badge">-38%</span>
+                        <span class="price-current">$24.99</span>
+                        <span class="price-original">$39.99</span>
+                        <span class="discount-badge">-37%</span>
                     </div>
                 </div>
             </div>
 
             <div class="product-card">
                 <button class="favorite-btn">♡</button>
-                <div class="product-image" style="background: linear-gradient(135deg, #e8d4ff 0%, #f0e8ff 100%);"></div>
+                <div class="product-image" style="background: linear-gradient(135deg, #caffd6 0%, #e8ffe8 100%);"></div>
                 <div class="product-info">
-                    <div class="product-category">Faldas</div>
-                    <div class="product-title">Falda Midi Plisada</div>
+                    <div class="product-category">Calzado</div>
+                    <div class="product-title">Zapatillas Multicolor</div>
                     <div class="product-price">
                         <span class="price-current">$39.99</span>
-                        <span class="price-original">$64.99</span>
-                        <span class="discount-badge">-38%</span>
+                        <span class="price-original">$59.99</span>
+                        <span class="discount-badge">-33%</span>
                     </div>
                 </div>
             </div>
 
             <div class="product-card">
                 <button class="favorite-btn">♡</button>
-                <div class="product-image" style="background: linear-gradient(135deg, #ffd4d4 0%, #ffe8e8 100%);"></div>
+                <div class="product-image" style="background: linear-gradient(135deg, #e8f0ff 0%, #f0f8ff 100%);"></div>
                 <div class="product-info">
-                    <div class="product-category">Blusas</div>
-                    <div class="product-title">Camisa de Seda Romántica</div>
+                    <div class="product-category">Camisetas</div>
+                    <div class="product-title">Camiseta Astronauta</div>
                     <div class="product-price">
-                        <span class="price-current">$44.99</span>
-                        <span class="price-original">$74.99</span>
-                        <span class="discount-badge">-40%</span>
+                        <span class="price-current">$22.99</span>
+                        <span class="price-original">$34.99</span>
+                        <span class="discount-badge">-34%</span>
                     </div>
                 </div>
             </div>
 
             <div class="product-card">
                 <button class="favorite-btn">♡</button>
-                <div class="product-image" style="background: linear-gradient(135deg, #d4fff4 0%, #e8fffa 100%);"></div>
+                <div class="product-image" style="background: linear-gradient(135deg, #fff4d6 0%, #fff9e8 100%);"></div>
                 <div class="product-info">
-                    <div class="product-category">Vestidos</div>
-                    <div class="product-title">Vestido Maxi Bohemio</div>
+                    <div class="product-category">Conjuntos</div>
+                    <div class="product-title">Conjunto Safari</div>
                     <div class="product-price">
-                        <span class="price-current">$69.99</span>
-                        <span class="price-original">$119.99</span>
-                        <span class="discount-badge">-42%</span>
+                        <span class="price-current">$32.99</span>
+                        <span class="price-original">$49.99</span>
+                        <span class="discount-badge">-34%</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="{{ asset('js/mujer.js') }}"></script>
+    <script src="{{ asset('js/ninos.js') }}"></script>
 </body>
 </html>

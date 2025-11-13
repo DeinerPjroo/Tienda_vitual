@@ -12,8 +12,17 @@ Route::get('/', function () {
 })->name('welcome');
 
 
+Route::get('/hombre', function () {
+    return view('hombre');
+})->name('hombre');
 
+Route::get('/ninos', function () {
+    return view('ninos');
+})->name('ninos');
 
+Route::get('/accesorios', function () {
+    return view('accesorios');
+})->name('accesorios');
 
 Route::get('/home', function () {
     return view('home');

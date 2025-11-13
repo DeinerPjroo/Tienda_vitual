@@ -17,7 +17,7 @@
             <nav>
                 <a href="{{ url('/home') }}">Inicio</a>
                 <a href="/mujer">Mujer</a>
-                <a href="/hombre">Hombre</a>
+                <a href="{{ url('/hombre') }}">Hombre</a>
                 <a href="/ninos">Niños</a>
                 <a href="/accesorios">Accesorios</a>
             </nav>
