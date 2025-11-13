@@ -15,11 +15,7 @@
                 </a>
 
             <nav>
-<<<<<<< HEAD
-                <a href="/home">Inicio</a>
-=======
                 <a href="{{ url('/home') }}">Inicio</a>
->>>>>>> b869f10d2b78338b3279bee2a1094d6f15207d82
                 <a href="/mujer">Mujer</a>
                 <a href="/hombre">Hombre</a>
                 <a href="/ninos">Niños</a>
