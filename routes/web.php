@@ -75,3 +75,10 @@ Route::get('/auth/google/callback', function () {
 
     return redirect()->intended(route('dashboard'));
 })->name('login.google.callback');
+
+
+
+use App\Http\Controllers\RegisterController;
+
+Route::get('/register', [RegisterController::class, 'showForm'])->name('register.form');
+Route::post('/register', [RegisterController::class, 'register'])->name('register');

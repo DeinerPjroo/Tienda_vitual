@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('carritos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('usuario_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('usuario_id')->constrained('usuarios')->onUpdate('cascade')->onDelete('cascade');
             $table->enum('estado', ['activo', 'completado', 'cancelado'])->default('activo');
             $table->timestamps();
         });

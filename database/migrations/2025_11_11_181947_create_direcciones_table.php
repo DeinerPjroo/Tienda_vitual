@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('direcciones', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('usuario_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('usuario_id')->constrained('usuarios')->onUpdate('cascade')->onDelete('cascade');
             $table->string('nombre_completo', 200);
             $table->string('telefono', 30)->nullable();
             $table->string('direccion_linea1', 255);

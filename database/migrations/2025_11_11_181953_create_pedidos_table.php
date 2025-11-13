@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('usuario_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('usuario_id')->constrained('usuarios')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('direccion_id')->nullable()->constrained('direcciones')->onUpdate('cascade')->onDelete('set null');
             $table->decimal('total', 12, 2);
             $table->decimal('costo_envio', 10, 2)->default(0);

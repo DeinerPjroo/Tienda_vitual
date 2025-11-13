@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('resenas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('usuario_id')->constrained('users')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('usuario_id')->constrained('usuarios')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('prenda_id')->constrained('prendas')->onUpdate('cascade')->onDelete('restrict');
             $table->tinyInteger('calificacion');
             $table->string('titulo', 255)->nullable();
