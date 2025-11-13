@@ -13,6 +13,10 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
+Route::get('/homeadmin', function () {
+    return view('homeadmin');
+})->name('homeadmin');
+
 Route::get('/favoritos', function () {
     return view('favoritos');
 })->name('favoritos');

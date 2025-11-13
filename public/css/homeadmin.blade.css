@@ -1,0 +1,159 @@
+/* === Paleta BeLuxe === */
+:root {
+    --beluxe-purple: #8b3ec7;   /* tono púrpura del vestido */
+    --beluxe-turquoise: #2cc4c4; /* tono aqua del marco */
+    --beluxe-dark: #2f2f2f;     /* gris oscuro del texto */
+    --beluxe-light: #f7f8fa;
+}
+
+/* === Estilos generales === */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--beluxe-light);
+    margin: 0;
+    padding: 0;
+    color: var(--beluxe-dark);
+}
+
+/* === Header === */
+header {
+    background: white;
+    border-bottom: 3px solid var(--beluxe-turquoise);
+    padding: 10px 40px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo-image {
+    height: 55px;
+}
+
+nav a {
+    margin: 0 12px;
+    text-decoration: none;
+    color: var(--beluxe-dark);
+    font-weight: 500;
+    transition: color 0.3s, border-bottom 0.3s;
+    padding-bottom: 3px;
+}
+
+nav a:hover {
+    color: var(--beluxe-purple);
+    border-bottom: 2px solid var(--beluxe-turquoise);
+}
+
+.header-actions .header-link {
+    margin-left: 15px;
+    text-decoration: none;
+    color: var(--beluxe-dark);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.header-actions .header-link:hover {
+    color: var(--beluxe-purple);
+}
+
+/* === Contenido principal === */
+.main-home {
+    padding: 40px;
+    text-align: center;
+}
+
+/* CENTRAR bienvenida */
+.dynamic-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    flex-direction: column;
+}
+
+.welcome-box {
+    background: linear-gradient(135deg, #ffffff, #f9f9ff);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(139, 62, 199, 0.1);
+    width: 90%;
+    max-width: 600px;
+    animation: fadeIn 1.2s ease-in-out;
+    border: 2px solid var(--beluxe-turquoise);
+}
+
+.saludo {
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--beluxe-purple);
+    margin-bottom: 15px;
+}
+
+.reloj {
+    font-size: 22px;
+    color: var(--beluxe-dark);
+    margin-bottom: 10px;
+}
+
+.frase {
+    font-size: 18px;
+    color: #555;
+    font-style: italic;
+}
+
+/* === Tarjetas de información === */
+.info-section h2 {
+    color: var(--beluxe-dark);
+    margin-bottom: 25px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+    border-left: 5px solid var(--beluxe-turquoise);
+    transition: transform 0.2s ease-in-out, border-color 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: var(--beluxe-purple);
+}
+
+.card h3 {
+    color: var(--beluxe-purple);
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--beluxe-dark);
+}
+
+/* === Footer === */
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #fff;
+    color: #777;
+    font-size: 14px;
+    border-top: 2px solid var(--beluxe-turquoise);
+    margin-top: 40px;
+}
+
+/* === Animaciones === */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

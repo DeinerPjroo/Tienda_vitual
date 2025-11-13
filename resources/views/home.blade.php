@@ -84,30 +84,7 @@
                     </div>
                 </div>
 
-                <!-- Marca -->
-                <div class="filter-section">
-                    <div class="filter-title">
-                        <span>Marca</span>
-                        <span>▼</span>
-                    </div>
-                    <div class="filter-options">
-                        <label class="filter-option">
-                            <input type="checkbox"> Marca Minimal
-                        </label>
-                        <label class="filter-option">
-                            <input type="checkbox"> Elegance
-                        </label>
-                        <label class="filter-option">
-                            <input type="checkbox"> UrbanStyle
-                        </label>
-                        <label class="filter-option">
-                            <input type="checkbox"> ActiveWear Pro
-                        </label>
-                        <label class="filter-option">
-                            <input type="checkbox"> Classic Fit
-                        </label>
-                    </div>
-                </div>
+
 
                 <!-- Talla -->
                 <div class="filter-section">
