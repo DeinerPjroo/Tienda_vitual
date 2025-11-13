@@ -1,3 +1,5 @@
+
+
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -11,6 +13,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
+Route::get('/favoritos', function () {
+    return view('favoritos');
+})->name('favoritos');
 
 Route::get('/hombre', function () {
     return view('hombre');
