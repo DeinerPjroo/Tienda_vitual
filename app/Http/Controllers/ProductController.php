@@ -44,54 +44,54 @@ class ProductController extends Controller
 }
 
     public function detalle($id)
-    {
-        // Obtener el producto con su categoría
-        $producto = DB::table('prendas')
-            ->leftJoin('categorias', 'prendas.categoria_id', '=', 'categorias.id')
-            ->select('prendas.*', 'categorias.nombre as categoria_nombre')
-            ->where('prendas.id', $id)
-            ->where('prendas.activo', 1)
-            ->first();
+{
+    // Obtener el producto con su categoría
+    $producto = DB::table('prendas')
+        ->leftJoin('categorias', 'prendas.categoria_id', '=', 'categorias.id')
+        ->select('prendas.*', 'categorias.nombre as categoria_nombre')
+        ->where('prendas.id', $id)
+        ->where('prendas.activo', 1)
+        ->first();
 
-        if (!$producto) {
-            abort(404, 'Producto no encontrado');
-        }
-
-        // Obtener todas las imágenes del producto
-        $imagenes = DB::table('imagenes_prenda')
-            ->where('prenda_id', $id)
-            ->orderBy('posicion')
-            ->get();
-
-        // Obtener todas las variaciones (colores, tallas, stock)
-        $variaciones = DB::table('variaciones')
-            ->where('prenda_id', $id)
-            ->get();
-
-        // Obtener colores únicos disponibles
-        $coloresDisponibles = DB::table('variaciones')
-            ->where('prenda_id', $id)
-            ->where('stock', '>', 0)
-            ->whereNotNull('color')
-            ->select('color')
-            ->distinct()
-            ->get();
-
-        // Obtener tallas únicas disponibles
-        $tallasDisponibles = DB::table('variaciones')
-            ->where('prenda_id', $id)
-            ->where('stock', '>', 0)
-            ->whereNotNull('talla')
-            ->select('talla')
-            ->distinct()
-            ->get();
-
-        return view('detalle', compact(
-            'producto', 
-            'imagenes', 
-            'variaciones', 
-            'coloresDisponibles', 
-            'tallasDisponibles'
-        ));
+    if (!$producto) {
+        abort(404, 'Producto no encontrado');
     }
+
+    // Obtener todas las imágenes del producto ordenadas por posición
+    $imagenes = DB::table('imagenes_prenda')
+        ->where('prenda_id', $id)
+        ->orderBy('posicion')
+        ->get();
+
+    // Obtener todas las variaciones (colores, tallas, stock)
+    $variaciones = DB::table('variaciones')
+        ->where('prenda_id', $id)
+        ->get();
+
+    // Obtener colores únicos disponibles
+    $coloresDisponibles = DB::table('variaciones')
+        ->where('prenda_id', $id)
+        ->where('stock', '>', 0)
+        ->whereNotNull('color')
+        ->select('color')
+        ->distinct()
+        ->get();
+
+    // Obtener tallas únicas disponibles
+    $tallasDisponibles = DB::table('variaciones')
+        ->where('prenda_id', $id)
+        ->where('stock', '>', 0)
+        ->whereNotNull('talla')
+        ->select('talla')
+        ->distinct()
+        ->get();
+
+    return view('detalle', compact(
+        'producto', 
+        'imagenes', 
+        'variaciones', 
+        'coloresDisponibles', 
+        'tallasDisponibles'
+    ));
+}
 }

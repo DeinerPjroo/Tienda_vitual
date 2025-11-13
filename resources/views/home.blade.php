@@ -365,7 +365,7 @@
         document.querySelector('.summary-row .summary-value').textContent = `$ ${subtotal.toLocaleString()}`;
         document.querySelector('.total-amount').textContent = `$ ${total.toLocaleString()}`;
     }
-</script>
+
 
     // Funciones de cantidad
     function increaseQty(btn) {

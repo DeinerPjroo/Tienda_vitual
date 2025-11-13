@@ -26,7 +26,14 @@
         <div class="product-gallery">
             <div class="main-image">
                 @if($imagenes->count() > 0)
-                    <img id="mainImage" src="{{ asset('storage/' . $imagenes->first()->url) }}" alt="{{ $producto->nombre }}">
+                    {{-- Verificar si la URL es externa o local --}}
+                    @php
+                        $primeraImagen = $imagenes->first()->url;
+                        $imageUrl = (str_starts_with($primeraImagen, 'http://') || str_starts_with($primeraImagen, 'https://')) 
+                            ? $primeraImagen 
+                            : asset('storage/' . $primeraImagen);
+                    @endphp
+                    <img id="mainImage" src="{{ $imageUrl }}" alt="{{ $producto->nombre }}" onerror="this.parentElement.innerHTML='<div class=\'no-image\'><span style=\'font-size: 5rem;\'>👕</span><p>Imagen no disponible</p></div>'">
                 @else
                     <div class="no-image">
                         <span style="font-size: 5rem;">👕</span>
@@ -39,10 +46,15 @@
             @if($imagenes->count() > 1)
                 <div class="thumbnail-gallery">
                     @foreach($imagenes as $imagen)
-                        <img src="{{ asset('storage/' . $imagen->url) }}" 
+                        @php
+                            $thumbUrl = (str_starts_with($imagen->url, 'http://') || str_starts_with($imagen->url, 'https://')) 
+                                ? $imagen->url 
+                                : asset('storage/' . $imagen->url);
+                        @endphp
+                        <img src="{{ $thumbUrl }}" 
                              alt="{{ $producto->nombre }}" 
                              class="thumbnail {{ $loop->first ? 'active' : '' }}"
-                             onclick="changeImage('{{ asset('storage/' . $imagen->url) }}', this)">
+                             onclick="changeImage('{{ $thumbUrl }}', this)">
                     @endforeach
                 </div>
             @endif
@@ -77,11 +89,29 @@
             <!-- Selección de Color -->
             @if($coloresDisponibles->count() > 0)
                 <div class="option-section">
-                    <label class="option-label">Color</label>
+                    <label class="option-label">Color: <span id="selected-color-name"></span></label>
                     <div class="color-options">
                         @foreach($coloresDisponibles as $color)
+                            @php
+                                // Mapeo de colores en español a códigos hexadecimales
+                                $colorMap = [
+                                    'Negro' => '#000000',
+                                    'Blanco' => '#FFFFFF',
+                                    'Rojo' => '#DC143C',
+                                    'Azul' => '#0000FF',
+                                    'Verde' => '#008000',
+                                    'Amarillo' => '#FFD700',
+                                    'Rosa' => '#FFC0CB',
+                                    'Gris' => '#808080',
+                                    'Café' => '#8B4513',
+                                    'Beige' => '#F5F5DC',
+                                ];
+                                
+                                $colorHex = $colorMap[$color->color] ?? '#CCCCCC';
+                            @endphp
                             <div class="color-option" 
-                                 style="background-color: {{ $color->color }};" 
+                                 style="background-color: {{ $colorHex }}; {{ $color->color == 'Blanco' ? 'border: 2px solid #e2e8f0;' : '' }}" 
+                                 data-color-name="{{ $color->color }}"
                                  title="{{ $color->color }}"
                                  onclick="selectColor('{{ $color->color }}', this)">
                             </div>
@@ -93,7 +123,7 @@
             <!-- Selección de Talla -->
             @if($tallasDisponibles->count() > 0)
                 <div class="option-section">
-                    <label class="option-label">Talla</label>
+                    <label class="option-label">Talla: <span id="selected-size-name"></span></label>
                     <div class="size-options">
                         @foreach($tallasDisponibles as $talla)
                             <button class="size-option" onclick="selectSize('{{ $talla->talla }}', this)">
@@ -187,12 +217,18 @@
             selectedColor = color;
             document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
             element.classList.add('selected');
+            
+            // Mostrar nombre del color seleccionado
+            document.getElementById('selected-color-name').textContent = color;
         }
 
         function selectSize(size, element) {
             selectedSize = size;
             document.querySelectorAll('.size-option').forEach(s => s.classList.remove('selected'));
             element.classList.add('selected');
+            
+            // Mostrar talla seleccionada
+            document.getElementById('selected-size-name').textContent = size;
         }
 
         function decreaseQuantity() {
@@ -211,11 +247,43 @@
 
         function addToCart() {
             const quantity = document.getElementById('quantity').value;
+            
+            // Validar que se haya seleccionado color y talla si están disponibles
+            @if($coloresDisponibles->count() > 0)
+                if (!selectedColor) {
+                    alert('Por favor selecciona un color');
+                    return;
+                }
+            @endif
+            
+            @if($tallasDisponibles->count() > 0)
+                if (!selectedSize) {
+                    alert('Por favor selecciona una talla');
+                    return;
+                }
+            @endif
+            
             alert(`Agregado al carrito: ${quantity} unidad(es)${selectedColor ? ', Color: ' + selectedColor : ''}${selectedSize ? ', Talla: ' + selectedSize : ''}`);
         }
 
         function buyNow() {
             const quantity = document.getElementById('quantity').value;
+            
+            // Validar que se haya seleccionado color y talla si están disponibles
+            @if($coloresDisponibles->count() > 0)
+                if (!selectedColor) {
+                    alert('Por favor selecciona un color');
+                    return;
+                }
+            @endif
+            
+            @if($tallasDisponibles->count() > 0)
+                if (!selectedSize) {
+                    alert('Por favor selecciona una talla');
+                    return;
+                }
+            @endif
+            
             alert(`Comprando ahora: ${quantity} unidad(es)`);
             // Aquí redirigirías al checkout
         }

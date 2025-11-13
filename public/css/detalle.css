@@ -204,7 +204,7 @@ body {
     color: #2d3748;
 }
 
-/* Color Options */
+/* Color Options - MEJORADO */
 .color-options {
     display: flex;
     gap: 12px;
@@ -212,23 +212,61 @@ body {
 }
 
 .color-option {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     cursor: pointer;
-    border: 3px solid transparent;
+    border: 3px solid #e2e8f0;
     transition: all 0.3s;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .color-option:hover {
     border-color: #cbd5e0;
     transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .color-option.selected {
     border-color: #667eea;
-    box-shadow: 0 0 0 2px white, 0 0 0 4px #667eea;
+    box-shadow: 0 0 0 2px white, 0 0 0 5px #667eea;
+    transform: scale(1.05);
+}
+
+/* Colores claros necesitan borde visible siempre */
+.color-option.color-claro {
+    border-color: #cbd5e0;
+}
+
+.color-option.color-claro:hover {
+    border-color: #a0aec0;
+}
+
+.color-option.color-claro.selected {
+    border-color: #667eea;
+}
+
+/* Checkmark para colores seleccionados */
+.color-checkmark {
+    display: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.color-option.selected .color-checkmark {
+    display: block;
+}
+
+/* Para colores claros, el checkmark debe ser oscuro */
+.color-option.color-claro .color-checkmark {
+    color: #2d3748;
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.8);
 }
 
 /* Size Options */
@@ -454,5 +492,10 @@ body {
 
     .main-image {
         height: 400px;
+    }
+    
+    .color-option {
+        width: 45px;
+        height: 45px;
     }
 }
