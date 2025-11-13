@@ -101,6 +101,9 @@ body {
     border-radius: 0 0 12px 12px;
     padding: 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+     display: flex;
+    flex-direction: column;
+    
 }
 
 .sidebar-link {
@@ -142,6 +145,9 @@ body {
 .sidebar-link.logout {
     color: #dc2626;
     font-weight: 500;
+    display: block; /* asegúrate */
+    width: 100%;
+    margin: 0; /* opcional */
 }
 
 .sidebar-link.logout:hover {

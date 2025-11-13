@@ -21,7 +21,7 @@
                 </div>
             </form>
             <a href="{{ url('/favoritos') }}" class="header-link">♡ Favoritos</a>
-            <a href="{{ url('/carrito') }}" class="header-link">🛒 Carrito</a>
+            <a href="{{ route('carrito.index') }}" class="header-link">🛒 Carrito</a>
             
             @auth
                 <a href="{{ route('profile') }}" class="header-link">

@@ -499,3 +499,27 @@ body {
         height: 45px;
     }
 }
+
+/* Estados deshabilitados */
+.size-option:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: #f7fafc;
+    color: #a0aec0;
+}
+
+.size-option:disabled:hover {
+    border-color: #e2e8f0;
+    color: #a0aec0;
+    background: #f7fafc;
+}
+
+.color-option[style*="opacity: 0.3"] {
+    cursor: not-allowed !important;
+}
+
+/* Validación visual */
+.option-section.required .option-label::after {
+    content: " *";
+    color: #e53e3e;
+}

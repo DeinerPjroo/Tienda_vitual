@@ -39,6 +39,8 @@ Route::get('/home', function () {
     return view('home');
 })->name('home');
 
+
+
 // Ruta para la vista de Mujer
 Route::get('/mujer', function () {
     return view('mujer');
@@ -120,3 +122,12 @@ use App\Http\Controllers\HomeController;
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+
+use App\Http\Controllers\CarritoController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/carrito', [CarritoController::class, 'index'])->name('carrito.index');
+    Route::post('/carrito/agregar', [CarritoController::class, 'agregar'])->name('carrito.agregar');
+    Route::put('/carrito/item/{id}', [CarritoController::class, 'actualizar'])->name('carrito.actualizar');
+    Route::delete('/carrito/item/{id}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
+});

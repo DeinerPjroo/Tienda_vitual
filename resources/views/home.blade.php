@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>BeLuxe - Tienda de Ropa</title>
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 </head>
@@ -286,9 +287,31 @@
 
     // Función para agregar al carrito
     function addToCart(productId, productName) {
-        alert('Producto "' + productName + '" agregado al carrito\n(Funcionalidad del carrito próximamente)');
-        // Aquí irá la lógica real del carrito
-    }
+    fetch('/carrito/agregar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            prenda_id: productId,
+            cantidad: 1
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('✅ ' + productName + ' agregado al carrito');
+            // Opcional: Actualizar contador del carrito en el header
+        } else {
+            alert('❌ ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al agregar al carrito');
+    });
+}
 
     // Modal del carrito
     document.addEventListener('DOMContentLoaded', function() {
