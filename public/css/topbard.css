@@ -1,0 +1,162 @@
+/* Topbar/Header Styles */
+
+/* Header */
+header {
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #2d3748;
+}
+
+.logo-image {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+nav {
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #4a5568;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #667eea;
+}
+
+nav a.active {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    padding: 8px 35px 8px 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    width: 250px;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+}
+
+.header-link {
+    text-decoration: none;
+    color: #4a5568;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.3s;
+}
+
+.header-link:hover {
+    color: #667eea;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    nav {
+        display: none;
+    }
+
+    .search-box input {
+        width: 150px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        padding: 0 15px;
+        height: 60px;
+    }
+
+    .logo-image {
+        height: 40px;
+    }
+
+    .header-actions {
+        gap: 15px;
+    }
+
+    .search-box input {
+        width: 120px;
+        padding: 6px 30px 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    .header-link {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-box {
+        display: none;
+    }
+
+    .header-link span {
+        display: none;
+    }
+
+    .header-link {
+        font-size: 1.2rem;
+    }
+}

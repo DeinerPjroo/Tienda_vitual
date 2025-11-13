@@ -5,46 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil - VogueCloset</title>
     <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="logo">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
-                    <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
-                    <path d="M7 18C7 16 9 14 12 14C15 14 17 16 17 18" stroke="currentColor" stroke-width="2"/>
-                </svg>
-                <span>VogueCloset</span>
-            </div>
-            <nav class="nav">
-                <a href="#" class="nav-link">Inicio</a>
-                <a href="#" class="nav-link">Categorías</a>
-                <a href="#" class="nav-link">Productos</a>
-                <a href="#" class="nav-link">Carrito</a>
-                <a href="#" class="nav-link active">Perfil</a>
-            </nav>
-            <div class="header-right">
-                <div class="search-box">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                        <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                        <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2"/>
-                    </svg>
-                    <input type="text" placeholder="Buscar artículos...">
-                </div>
-                <button class="search-btn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                        <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-                        <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2"/>
-                    </svg>
-                </button>
-                <div class="profile-icon">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->nombre) }}&size=100&background=4b5563&color=fff" alt="Profile">
-                </div>
-            </div>
-        </div>
-    </header>
+    <x-topbar />
 
     <!-- Main Content -->
     <main class="main-content">

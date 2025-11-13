@@ -8,31 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <a class="logo">
-                <img src="{{ asset('images/beluxe-logo.png') }}" alt="BeLuxe Logo" class="logo-image">
-            </a>
-
-            <nav>
-                <a href="{{ url('/home') }}">Inicio</a>
-                <a href="/mujer">Mujer</a>
-                <a href="/hombre" class="active">Hombre</a>
-                <a href="/ninos">Niños</a>
-                <a href="/accesorios">Accesorios</a>
-            </nav>
-
-            <div class="header-actions">
-                <div class="search-box">
-                    <input type="text" placeholder="Buscar productos...">
-                    <span class="search-icon">🔍</span>
-                </div>
-                <a href="/favoritos" class="header-link">♡ Favoritos</a>
-                <a href="/carrito" class="header-link">🛒 Carrito</a>
-                <a href="/cuenta" class="header-link">👤 Cuenta</a>
-            </div>
-        </div>
-    </header>
+    <x-topbar />
 
     <div class="hero">
         <h1>Moda para Hombre</h1>
