@@ -17,9 +17,15 @@ Route::get('/register', function () {
     return view('register');
 })->name('register');
 
+
 Route::get('/home', function () {
     return view('home');
 })->name('home');
+
+// Ruta para la vista de Mujer
+Route::get('/mujer', function () {
+    return view('mujer');
+})->name('mujer');
 
 
 Route::view('dashboard', 'dashboard')
