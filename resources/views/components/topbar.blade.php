@@ -1,3 +1,4 @@
+<!-- resources/views/components/topbar.blade.php -->
 <header>
     <div class="header-content">
         <a href="{{ url('/home') }}" class="logo">
@@ -13,10 +14,12 @@
         </nav>
 
         <div class="header-actions">
-            <div class="search-box">
-                <input type="text" placeholder="Buscar productos...">
-                <span class="search-icon">🔍</span>
-            </div>
+            <form action="{{ route('productos.buscar') }}" method="GET" class="search-form">
+                <div class="search-box">
+                    <input type="text" name="q" placeholder="Buscar productos..." value="{{ request('q') }}" required>
+                    <button type="submit" class="search-icon">🔍</button>
+                </div>
+            </form>
             <a href="{{ url('/favoritos') }}" class="header-link">♡ Favoritos</a>
             <a href="{{ url('/carrito') }}" class="header-link">🛒 Carrito</a>
             

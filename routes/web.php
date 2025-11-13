@@ -107,3 +107,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
+
+
+
+use App\Http\Controllers\ProductController;
+
+Route::get('/buscar', [ProductController::class, 'buscar'])->name('productos.buscar');
+Route::get('/producto/{id}', [ProductController::class, 'detalle'])->name('producto.detalle');
+
+
+use App\Http\Controllers\HomeController;
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+

@@ -826,3 +826,32 @@ nav a:hover {
             right: -100%;
         }
     }
+
+    .btn-details {
+    padding: 10px 20px;
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.btn-details:hover {
+    background: #667eea;
+    color: white;
+}
+
+.product-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 8px 0;
+    line-height: 1.4;
+    min-height: 40px;
+}

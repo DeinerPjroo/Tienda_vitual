@@ -131,102 +131,73 @@
                 </div>
 
                 <div class="products-grid">
-                    <!-- Product 1 -->
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400" alt="Camiseta">
-                            <button class="wishlist-btn">♡</button>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Camiseta Básica de Algodón</h3>
-                            <p class="product-price">$35.00</p>
-                            <div class="product-actions">
-                                <button class="btn-add-cart">Añadir al Carrito</button>
-                                <button class="btn-details">Ver Detalles</button>
-                            </div>
-                        </div>
+    @forelse($productos as $producto)
+        <div class="product-card">
+            <div class="product-image">
+                @if($producto->imagen_url)
+                    <img src="{{ $producto->imagen_url }}" alt="{{ $producto->nombre }}">
+                @else
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%); display: flex; align-items: center; justify-content: center; color: #a0aec0; font-size: 3rem;">
+                        👕
                     </div>
-
-                    <!-- Product 2 -->
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=400" alt="Pantalón">
-                            <button class="wishlist-btn">♡</button>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Pantalón Vaquero Ajustado</h3>
-                            <p class="product-price">$70.00</p>
-                            <div class="product-actions">
-                                <button class="btn-add-cart">Añadir al Carrito</button>
-                                <button class="btn-details">Ver Detalles</button>
-                            </div>
-                        </div>
+                @endif
+                <button class="wishlist-btn">♡</button>
+            </div>
+            <div class="product-info">
+                @if($producto->categoria_nombre)
+                    <div style="font-size: 0.85rem; color: #718096; margin-bottom: 5px; text-transform: uppercase;">
+                        {{ $producto->categoria_nombre }}
                     </div>
-
-                    <!-- Product 3 -->
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400" alt="Vestido">
-                            <button class="wishlist-btn">♡</button>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Vestido Fluido Estampado</h3>
-                            <p class="product-price">$85.00</p>
-                            <div class="product-actions">
-                                <button class="btn-add-cart">Añadir al Carrito</button>
-                                <button class="btn-details">Ver Detalles</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 4 -->
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=400" alt="Sudadera">
-                            <button class="wishlist-btn">♡</button>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Sudadera con Capucha Premium</h3>
-                            <p class="product-price">$60.00</p>
-                            <div class="product-actions">
-                                <button class="btn-add-cart">Añadir al Carrito</button>
-                                <button class="btn-details">Ver Detalles</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 5 -->
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400" alt="Blusa">
-                            <button class="wishlist-btn">♡</button>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Blusa de Lino Transpirable</h3>
-                            <p class="product-price">$50.00</p>
-                            <div class="product-actions">
-                                <button class="btn-add-cart">Añadir al Carrito</button>
-                                <button class="btn-details">Ver Detalles</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 6 -->
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400" alt="Chaqueta">
-                            <button class="wishlist-btn">♡</button>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-name">Chaqueta Impermeable Ligera</h3>
-                            <p class="product-price">$110.00</p>
-                            <div class="product-actions">
-                                <button class="btn-add-cart">Añadir al Carrito</button>
-                                <button class="btn-details">Ver Detalles</button>
-                            </div>
-                        </div>
-                    </div>
+                @endif
+                
+                <h3 class="product-name">{{ $producto->nombre }}</h3>
+                
+                @if($producto->descripcion_corta)
+                    <p style="font-size: 0.85rem; color: #718096; margin: 8px 0;">
+                        {{ Str::limit($producto->descripcion_corta, 60) }}
+                    </p>
+                @endif
+                
+                @if($producto->descuento > 0)
+                    <p class="product-price" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span style="font-weight: 700; color: #667eea; font-size: 1.2rem;">
+                            ${{ number_format($producto->precio * (1 - $producto->descuento / 100), 0) }}
+                        </span>
+                        <span style="font-size: 0.9rem; color: #a0aec0; text-decoration: line-through;">
+                            ${{ number_format($producto->precio, 0) }}
+                        </span>
+                        <span style="background: #48bb78; color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                            -{{ $producto->descuento }}%
+                        </span>
+                    </p>
+                @else
+                    <p class="product-price" style="font-weight: 700; color: #2d3748; font-size: 1.2rem;">
+                        ${{ number_format($producto->precio, 0) }}
+                    </p>
+                @endif
+                
+                <div class="product-actions">
+                    <button class="btn-add-cart" onclick="addToCart({{ $producto->id }}, '{{ $producto->nombre }}')">
+                        Añadir al Carrito
+                    </button>
+                    <a href="{{ route('producto.detalle', $producto->id) }}" class="btn-details">
+                        Ver Detalles
+                    </a>
                 </div>
+            </div>
+        </div>
+    @empty
+        <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+            <div style="font-size: 4rem; margin-bottom: 20px;">📦</div>
+            <h2 style="font-size: 1.5rem; color: #2d3748; margin-bottom: 10px;">
+                No hay productos disponibles
+            </h2>
+            <p style="color: #718096;">
+                Agrega productos desde el panel de administración
+            </p>
+        </div>
+    @endforelse
+</div>
             </div>
         </div>
     </div>
@@ -297,29 +268,35 @@
 </div>
 
     <script>
-        // Funcionalidad para tabs
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
+    // Funcionalidad para tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
         });
+    });
 
-        // Funcionalidad para botón de favoritos
-        document.querySelectorAll('.wishlist-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                this.innerHTML = this.innerHTML === '♡' ? '❤️' : '♡';
-            });
+    // Funcionalidad para botón de favoritos
+    document.querySelectorAll('.wishlist-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.innerHTML = this.innerHTML === '♡' ? '❤️' : '♡';
         });
+    });
 
-         document.addEventListener('DOMContentLoaded', function() {
+    // Función para agregar al carrito
+    function addToCart(productId, productName) {
+        alert('Producto "' + productName + '" agregado al carrito\n(Funcionalidad del carrito próximamente)');
+        // Aquí irá la lógica real del carrito
+    }
+
+    // Modal del carrito
+    document.addEventListener('DOMContentLoaded', function() {
         const cartLink = document.querySelector('a[href="/carrito"]');
         const cartModal = document.getElementById('cart-modal');
         const modalOverlay = document.getElementById('modal-overlay');
         const closeCart = document.getElementById('close-cart');
 
-        // Abrir carrito al hacer click en el enlace
         if (cartLink) {
             cartLink.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -329,16 +306,66 @@
             });
         }
 
-        // Cerrar carrito
         function closeCartModal() {
             cartModal.classList.remove('active');
             modalOverlay.classList.remove('active');
             document.body.style.overflow = '';
         }
 
-        closeCart.addEventListener('click', closeCartModal);
-        modalOverlay.addEventListener('click', closeCartModal);
+        if (closeCart) {
+            closeCart.addEventListener('click', closeCartModal);
+        }
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', closeCartModal);
+        }
     });
+
+    // Funciones de cantidad del carrito
+    function increaseQty(btn) {
+        const qtySpan = btn.previousElementSibling;
+        let qty = parseInt(qtySpan.textContent);
+        qtySpan.textContent = qty + 1;
+        updateCartTotal();
+    }
+
+    function decreaseQty(btn) {
+        const qtySpan = btn.nextElementSibling;
+        let qty = parseInt(qtySpan.textContent);
+        if (qty > 1) {
+            qtySpan.textContent = qty - 1;
+            updateCartTotal();
+        }
+    }
+
+    function removeItem(btn) {
+        if (confirm('¿Eliminar este producto del carrito?')) {
+            btn.closest('.cart-item').remove();
+            updateCartTotal();
+        }
+    }
+
+    function updateCartTotal() {
+        const items = document.querySelectorAll('.cart-item');
+        let totalItems = 0;
+        let subtotal = 0;
+
+        items.forEach(item => {
+            const qty = parseInt(item.querySelector('.quantity').textContent);
+            const priceText = item.querySelector('.item-price').textContent.replace(/[$.]/g, '').trim();
+            const price = parseInt(priceText);
+            totalItems += qty;
+            subtotal += price * qty;
+        });
+
+        document.getElementById('cart-items-count').textContent = totalItems;
+        
+        const shipping = 7000;
+        const total = subtotal + shipping;
+        
+        document.querySelector('.summary-row .summary-value').textContent = `$ ${subtotal.toLocaleString()}`;
+        document.querySelector('.total-amount').textContent = `$ ${total.toLocaleString()}`;
+    }
+</script>
 
     // Funciones de cantidad
     function increaseQty(btn) {
