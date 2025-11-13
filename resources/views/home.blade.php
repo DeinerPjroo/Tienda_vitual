@@ -29,7 +29,7 @@
                 </div>
                 <a href="/favoritos" class="header-link">♡ Favoritos</a>
                 <a href="/carrito" class="header-link">🛒 Carrito</a>
-                <a href="/cuenta" class="header-link">👤 Cuenta</a>
+                <a href="/profile" class="header-link">👤 Cuenta</a>
             </div>
         </div>
     </header>

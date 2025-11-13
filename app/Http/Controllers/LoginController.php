@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
@@ -20,7 +20,6 @@ class LoginController extends Controller
         Log::info('=== INICIO LOGIN ===');
         Log::info('Datos POST:', $request->only('email'));
 
-        // Validación
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
@@ -31,10 +30,8 @@ class LoginController extends Controller
         ]);
 
         try {
-            // Buscar usuario por correo
             $usuario = Usuario::where('correo', $request->email)->first();
 
-            // Verificar si existe el usuario
             if (!$usuario) {
                 Log::warning('Usuario no encontrado:', ['email' => $request->email]);
                 return back()->withErrors([
@@ -42,7 +39,6 @@ class LoginController extends Controller
                 ])->withInput($request->only('email'));
             }
 
-            // Verificar si el usuario está activo
             if (!$usuario->activo) {
                 Log::warning('Usuario inactivo:', ['email' => $request->email]);
                 return back()->withErrors([
@@ -50,7 +46,6 @@ class LoginController extends Controller
                 ])->withInput($request->only('email'));
             }
 
-            // Verificar contraseña
             if (!Hash::check($request->password, $usuario->password)) {
                 Log::warning('Contraseña incorrecta:', ['email' => $request->email]);
                 return back()->withErrors([
@@ -58,27 +53,17 @@ class LoginController extends Controller
                 ])->withInput($request->only('email'));
             }
 
-            // Login exitoso
+            // 🔥 AQUÍ ESTÁ EL CAMBIO IMPORTANTE
+            // Autenticar con Auth de Laravel
+            Auth::login($usuario, $request->filled('remember'));
+            $request->session()->regenerate();
+
             Log::info('Login exitoso:', ['user_id' => $usuario->id]);
-
-            // Guardar en sesión
-            Session::put('usuario_id', $usuario->id);
-            Session::put('usuario_nombre', $usuario->nombre);
-            Session::put('usuario_rol', $usuario->rol_id);
-            Session::put('usuario_correo', $usuario->correo);
-
-            // Manejar "Recuérdame" (opcional)
-            if ($request->has('remember')) {
-                // Aquí podrías implementar cookies de larga duración
-                // Por ahora, Laravel maneja esto automáticamente con la sesión
-            }
 
             // Redirigir según el rol
             if ($usuario->rol_id == 1) {
-                // Admin
                 return redirect()->route('dashboard')->with('success', '¡Bienvenido de vuelta, ' . $usuario->nombre . '!');
             } else {
-                // Cliente normal
                 return redirect()->route('home')->with('success', '¡Bienvenido de vuelta, ' . $usuario->nombre . '!');
             }
 
@@ -95,11 +80,13 @@ class LoginController extends Controller
         }
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        Log::info('Usuario cerrando sesión:', ['user_id' => Session::get('usuario_id')]);
+        Log::info('Usuario cerrando sesión:', ['user_id' => Auth::id()]);
         
-        Session::flush(); // Elimina toda la sesión
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         
         return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente.');
     }

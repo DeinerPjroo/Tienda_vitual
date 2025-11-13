@@ -33,6 +33,8 @@ Route::get('/accesorios', function () {
     return view('accesorios');
 })->name('accesorios');
 
+
+
 Route::get('/home', function () {
     return view('home');
 })->name('home');
@@ -98,3 +100,10 @@ Route::get('/auth/google/callback', function () {
 
     return redirect()->intended(route('dashboard'));
 })->name('login.google.callback');
+
+use App\Http\Controllers\ProfileController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
