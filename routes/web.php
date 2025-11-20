@@ -212,3 +212,40 @@ Route::post('/pedido/{id}/devolucion', [PedidoController::class, 'devolucion'])-
 Route::get('/pedido/{id}/rastrear', [PedidoController::class, 'rastrear'])->name('pedido.rastrear');
 Route::get('/pedido/{id}/factura', [PedidoController::class, 'factura'])->name('pedido.factura');
 
+
+
+// gestion de productos 
+use App\Http\Controllers\AdminProductController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/gestion-productos', [AdminProductController::class, 'index'])->name('gestion.productos');
+    Route::post('/gestion-productos', [AdminProductController::class, 'store'])->name('admin.productos.store');
+    Route::get('/gestion-productos/{id}', [AdminProductController::class, 'show'])->name('admin.productos.show');
+    Route::put('/gestion-productos/{id}', [AdminProductController::class, 'update'])->name('admin.productos.update');
+    Route::delete('/gestion-productos/{id}', [AdminProductController::class, 'destroy'])->name('admin.productos.destroy');
+});
+
+// gestion de usuario 
+
+use App\Http\Controllers\AdminUserController;
+
+// Rutas de gestión de usuarios (protegidas con autenticación)
+Route::middleware(['auth'])->group(function () {
+    // Ruta principal - Lista de usuarios
+    Route::get('/gestion-usuarios', [AdminUserController::class, 'index'])->name('gestion.usuarios');
+    
+    // Crear usuario
+    Route::post('/usuarios/store', [AdminUserController::class, 'store'])->name('usuarios.store');
+    
+    // Ver usuario
+    Route::get('/usuarios/{id}', [AdminUserController::class, 'show'])->name('usuarios.show');
+    
+    // Editar usuario (cargar datos)
+    Route::get('/usuarios/{id}/edit', [AdminUserController::class, 'edit'])->name('usuarios.edit');
+    
+    // Actualizar usuario
+    Route::post('/usuarios/update', [AdminUserController::class, 'update'])->name('usuarios.update');
+    
+    // Eliminar usuario
+    Route::delete('/usuarios/{id}', [AdminUserController::class, 'destroy'])->name('usuarios.destroy');
+});

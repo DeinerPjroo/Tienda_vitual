@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Categoria extends Model
+{
+    protected $table = 'categorias';
+    
+    protected $fillable = [
+        'nombre',
+        'descripcion',
+        'slug',
+        'activo'
+    ];
+
+    // Relación con prendas
+    public function prendas()
+    {
+        return $this->hasMany(Prenda::class);
+    }
+}
