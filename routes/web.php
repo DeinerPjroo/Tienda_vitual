@@ -20,9 +20,17 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
+Route::get('/gestion-clientes', function () {
+    return view('Admin.GestionClientes');
+})->name('gestion.clientes');
+
 Route::get('/homeadmin', function () {
     return view('admin.homeadmin');
 })->name('homeadmin');
+
+Route::get('/gestion-productos', function () {
+    return view('Admin.GestionDeProductos');
+})->name('gestion.productos');
 
 Route::get('/favoritos', function () {
     return view('favoritos');

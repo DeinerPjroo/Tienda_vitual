@@ -15,9 +15,8 @@
             </a>
 
             <nav>
-                <a href="#">Gestión de Productos</a>
-                <a href="#">Gestión de Clientes</a>
-                <a href="#">Gestion de Categorías</a>
+                <a href="/gestion-productos">Gestión de Productos</a>
+                <a href="/gestion-clientes">Gestión de Clientes</a>
                 <a href="#">Ventas</a>
                 <a href="#">Envíos</a>
             </nav>
