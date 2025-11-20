@@ -21,7 +21,7 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::get('/homeadmin', function () {
-    return view('homeadmin');
+    return view('admin.homeadmin');
 })->name('homeadmin');
 
 Route::get('/favoritos', function () {
