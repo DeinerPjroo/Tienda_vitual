@@ -116,7 +116,7 @@
 
                     <p class="tax-included">IVA incluido</p>
 
-                    <button class="checkout-btn" onclick="proceedToCheckout()">
+                    <button class="checkout-btn" onclick="proceedToCheckout()" href="{{ route('checkout') }}">
                         Finalizar Compra
                     </button>
 
@@ -197,9 +197,39 @@
         }
 
         function proceedToCheckout() {
-            alert('Redirigiendo al checkout (funcionalidad próximamente)');
-            // window.location.href = '/checkout';
+            
+            window.location.href = '/checkout';
         }
+
+        function mostrarModalConfirmacion() {
+    const modal = document.getElementById("modalConfirmacion");
+    const contadorEl = document.getElementById("contadorRedirect");
+    let segundos = 3;
+
+    modal.style.display = "flex";
+
+    const intervalo = setInterval(() => {
+        segundos--;
+        contadorEl.textContent = segundos;
+
+        if (segundos === 0) {
+            clearInterval(intervalo);
+            window.location.href = "historial_pedidos.php";
+        }
+    }, 1000);
+}
     </script>
+
+    <!-- Modal de Confirmación -->
+<div id="modalConfirmacion" class="modal-confirmacion" style="display:none;">
+    <div class="modal-content">
+        <h2>¡Pedido Confirmado!</h2>
+        <p>Tu pedido ha sido procesado exitosamente.</p>
+        <p>Serás redirigido en <span id="contadorRedirect">3</span> segundos...</p>
+
+        <a href="historial_pedidos.php" class="btn btn-ir">Ir ahora</a>
+    </div>
+</div>
+
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil - VogueCloset</title>
+    <title>Perfil - BeLuxe</title>
     <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
 </head>
@@ -26,9 +26,16 @@
                         <p class="profile-email">{{ auth()->user()->correo }}</p>
                     </div>
                     <nav class="sidebar-nav">
-                        <a href="#" class="sidebar-link active">Información Personal</a>
-                        <a href="#" class="sidebar-link">Historial de Pedidos</a>
-                        <a href="#" class="sidebar-link">Direcciones</a>
+                        <!-- Link a Información Personal -->
+                        <a href="{{ route('profile') }}" class="sidebar-link active">Información Personal</a>
+                        
+                        <!-- Link a Historial de Pedidos -->
+                        <a href="{{ route('pedidos') }}" class="sidebar-link">Historial de Pedidos</a>
+                        
+                        <!-- Link a Direcciones -->
+                        <a href="{{ route('direcciones') }}" class="sidebar-link">Direcciones</a>
+                        
+                        <!-- Formulario de Logout -->
                         <form method="POST" action="{{ route('logout') }}" id="logout-form">
                             @csrf
                             <button type="submit" class="sidebar-link logout">Cerrar Sesión</button>
@@ -39,13 +46,13 @@
                 <!-- Content Area -->
                 <section class="content-area">
                     @if(session('success'))
-                        <div style="background-color: #10b981; color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <div class="alert alert-success">
                             {{ session('success') }}
                         </div>
                     @endif
 
                     @if($errors->any())
-                        <div style="background-color: #ef4444; color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <div class="alert alert-error">
                             <ul style="margin: 0; padding-left: 1.5rem;">
                                 @foreach($errors->all() as $error)
                                     <li>{{ $error }}</li>
@@ -58,6 +65,7 @@
                     <form class="profile-form" method="POST" action="{{ route('profile.update') }}">
                         @csrf
                         @method('PUT')
+                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="nombre">Nombre</label>
@@ -68,6 +76,7 @@
                                 <input type="text" id="apellido" name="apellido" value="{{ old('apellido', auth()->user()->apellido) }}" required>
                             </div>
                         </div>
+                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="email">Correo Electrónico</label>
@@ -78,6 +87,7 @@
                                 <input type="tel" id="telefono" name="telefono" value="{{ old('telefono', auth()->user()->telefono) }}">
                             </div>
                         </div>
+                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="fecha_nacimiento">Fecha de Nacimiento</label>
@@ -87,6 +97,7 @@
                                 <!-- Espacio vacío para mantener el grid -->
                             </div>
                         </div>
+                        
                         <button type="submit" class="btn-submit">Guardar Cambios</button>
                     </form>
                 </section>
@@ -128,5 +139,23 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // Resaltar link activo según la URL actual
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const links = document.querySelectorAll('.sidebar-link');
+            
+            links.forEach(link => {
+                // Remover clase active de todos
+                link.classList.remove('active');
+                
+                // Agregar active al link que coincida con la URL actual
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
