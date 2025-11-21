@@ -9,29 +9,9 @@
 </head>
 
 <body>
-    <!-- Header -->
-    <header>
+    <x-topbar-admin />
 
-
-        <div class="header-content">
-            <a class="logo" href="/homeadmin">
-                <img src="{{ asset('images/beluxe-logo.png') }}" alt="BeLuxe Logo" class="logo-image">
-            </a>
-
-            <nav>
-                <a href="/gestion-productos" class="active">Gestión de Productos</a>
-                <a href="/gestion-clientes">Gestión de Clientes</a>
-                <a href="#">Ventas</a>
-                <a href="#">Envíos</a>
-            </nav>
-
-            <div class="header-actions">
-                <a href="/carrito" class="header-link">🛒 Pedidos</a>
-                <a href="/cuenta" class="header-link">👤 Cuenta</a>
-            </div>
-        </div>
-
-        <!-- Mensajes de éxito/error -->
+    <!-- Mensajes de éxito/error -->
         @if (session('success'))
             <div class="alert alert-success"
                 style="background: #d4edda; color: #155724; padding: 15px; margin: 20px; border-radius: 8px; border-left: 4px solid #28a745;">
@@ -57,8 +37,6 @@
                 </ul>
             </div>
         @endif
-    </header>
-
 
     <!-- Main Content -->
     <div class="container">

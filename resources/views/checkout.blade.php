@@ -207,7 +207,7 @@
                             <span class="total-amount">${{ number_format($total, 0) }}</span>
                         </div>
 
-                        <button type="submit" class="btn-place-order" id="btnPlaceOrder">
+                        <button type="button" class="btn-place-order" id="btnPlaceOrder" onclick="mostrarConfirmacion()">
                             Confirmar Pedido
                         </button>
 
@@ -220,6 +220,45 @@
             </div>
         </form>
     </div>
+
+    <!-- Modal de Confirmación -->
+    <div id="confirmModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 500px; margin: 10% auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <h2 style="margin-top: 0; color: #2d3748;">⚠️ Confirmar Pedido</h2>
+            <div id="confirmContent" style="margin: 20px 0;">
+                <!-- El contenido se llenará dinámicamente -->
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                <button type="button" onclick="cerrarConfirmacion()" style="padding: 10px 20px; background: #e2e8f0; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">
+                    Cancelar
+                </button>
+                <button type="button" onclick="confirmarPedido()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">
+                    Sí, Confirmar Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .confirm-item {
+            padding: 10px;
+            background: #f7fafc;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+    </style>
 
     <script>
         // Manejar selección de dirección
@@ -244,27 +283,82 @@
             });
         });
 
-        // Validar formulario antes de enviar
-        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+        function mostrarConfirmacion() {
             const direccion = document.querySelector('input[name="direccion_id"]:checked');
             const metodoPago = document.querySelector('input[name="metodo_pago"]:checked');
             
             if (!direccion) {
-                e.preventDefault();
-                alert('Por favor selecciona una dirección de envío');
-                return false;
+                alert('⚠️ Por favor selecciona una dirección de envío');
+                return;
             }
             
             if (!metodoPago) {
-                e.preventDefault();
-                alert('Por favor selecciona un método de pago');
-                return false;
+                alert('⚠️ Por favor selecciona un método de pago');
+                return;
             }
 
-            // Deshabilitar botón para evitar doble envío
+            // Obtener información de la dirección seleccionada
+            const direccionCard = direccion.closest('.address-option');
+            const direccionNombre = direccionCard.querySelector('strong').textContent;
+            const direccionTexto = direccionCard.querySelector('.address-text').textContent.trim();
+            
+            // Obtener información del método de pago
+            const metodoPagoCard = metodoPago.closest('.payment-option');
+            const metodoPagoNombre = metodoPagoCard.querySelector('strong').textContent;
+            
+            // Obtener total
+            const total = document.querySelector('.total-amount').textContent;
+            
+            // Construir contenido del modal
+            let contenido = `
+                <p style="margin-bottom: 15px; font-size: 1.1rem;"><strong>¿Estás seguro de que deseas confirmar este pedido?</strong></p>
+                
+                <div style="background: #f7fafc; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                    <p style="margin: 5px 0;"><strong>📦 Dirección de Envío:</strong></p>
+                    <p style="margin: 5px 0; color: #4a5568;">${direccionNombre}</p>
+                    <p style="margin: 5px 0; color: #4a5568; font-size: 0.9rem;">${direccionTexto.replace(/\n/g, ', ')}</p>
+                </div>
+                
+                <div style="background: #f7fafc; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                    <p style="margin: 5px 0;"><strong>💳 Método de Pago:</strong></p>
+                    <p style="margin: 5px 0; color: #4a5568;">${metodoPagoNombre}</p>
+                </div>
+                
+                <div style="background: #e6fffa; padding: 15px; border-radius: 5px; margin: 15px 0; border: 2px solid #38b2ac;">
+                    <p style="margin: 5px 0;"><strong>💰 Total a Pagar:</strong></p>
+                    <p style="margin: 5px 0; font-size: 1.3rem; color: #2d3748; font-weight: bold;">${total}</p>
+                </div>
+                
+                <p style="margin-top: 15px; color: #718096; font-size: 0.9rem;">
+                    Al confirmar, tu pedido será procesado y recibirás un correo de confirmación.
+                </p>
+            `;
+            
+            document.getElementById('confirmContent').innerHTML = contenido;
+            document.getElementById('confirmModal').style.display = 'flex';
+        }
+
+        function cerrarConfirmacion() {
+            document.getElementById('confirmModal').style.display = 'none';
+        }
+
+        function confirmarPedido() {
             const btn = document.getElementById('btnPlaceOrder');
             btn.disabled = true;
             btn.textContent = 'Procesando...';
+            
+            // Cerrar modal
+            cerrarConfirmacion();
+            
+            // Enviar formulario
+            document.getElementById('checkoutForm').submit();
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('confirmModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarConfirmacion();
+            }
         });
     </script>
 </body>

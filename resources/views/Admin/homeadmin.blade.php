@@ -7,26 +7,7 @@
     <link rel="stylesheet" href="{{ asset('css/homeadmin.blade.css') }}">
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <div class="header-content">
-            <a class="logo">
-                <img src="{{ asset('images/beluxe-logo.png') }}" alt="BeLuxe Logo" class="logo-image">
-            </a>
-
-            <nav>
-                <a href="/gestion-productos">Gestión de Productos</a>
-                <a href="/gestion-clientes">Gestión de Clientes</a>
-                <a href="#">Ventas</a>
-                <a href="#">Envíos</a>
-            </nav>
-
-            <div class="header-actions">
-                <a href="/carrito" class="header-link">🛒 Pedidos</a>
-                <a href="/cuenta" class="header-link">👤 Cuenta</a>
-            </div>
-        </div>
-    </header>
+    <x-topbar-admin />
 
     <!-- Contenido principal centrado -->
     <main class="main-home">

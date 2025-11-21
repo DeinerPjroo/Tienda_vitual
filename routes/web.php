@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\AdminUserController;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 use Laravel\Socialite\Facades\Socialite;
@@ -20,9 +21,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-Route::get('/gestion-clientes', function () {
-    return view('Admin.GestionClientes');
-})->name('gestion.clientes');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/gestion-clientes', [AdminUserController::class, 'index'])->name('gestion.clientes');
+});
 
 Route::get('/homeadmin', function () {
     return view('admin.homeadmin');
@@ -227,25 +228,43 @@ Route::middleware(['auth'])->group(function () {
 
 // gestion de usuario 
 
-use App\Http\Controllers\AdminUserController;
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    // Rutas de usuarios
+    Route::get('/usuarios', [AdminUserController::class, 'index'])->name('admin.usuarios.index');
+    Route::post('/usuarios', [AdminUserController::class, 'store'])->name('admin.usuarios.store');
+    Route::get('/usuarios/{id}', [AdminUserController::class, 'show'])->name('admin.usuarios.show');
+    Route::put('/usuarios/{id}', [AdminUserController::class, 'update'])->name('admin.usuarios.update');
+    Route::delete('/usuarios/{id}', [AdminUserController::class, 'destroy'])->name('admin.usuarios.destroy');
+    Route::post('/usuarios/{id}/toggle-activo', [AdminUserController::class, 'toggleActivo'])->name('admin.usuarios.toggle');
+});
 
-// Rutas de gestión de usuarios (protegidas con autenticación)
+// gestion de categorias
+use App\Http\Controllers\AdminCategoriaController;
+
 Route::middleware(['auth'])->group(function () {
-    // Ruta principal - Lista de usuarios
-    Route::get('/gestion-usuarios', [AdminUserController::class, 'index'])->name('gestion.usuarios');
-    
-    // Crear usuario
-    Route::post('/usuarios/store', [AdminUserController::class, 'store'])->name('usuarios.store');
-    
-    // Ver usuario
-    Route::get('/usuarios/{id}', [AdminUserController::class, 'show'])->name('usuarios.show');
-    
-    // Editar usuario (cargar datos)
-    Route::get('/usuarios/{id}/edit', [AdminUserController::class, 'edit'])->name('usuarios.edit');
-    
-    // Actualizar usuario
-    Route::post('/usuarios/update', [AdminUserController::class, 'update'])->name('usuarios.update');
-    
-    // Eliminar usuario
-    Route::delete('/usuarios/{id}', [AdminUserController::class, 'destroy'])->name('usuarios.destroy');
+    Route::get('/gestion-categorias', [AdminCategoriaController::class, 'index'])->name('admin.categorias.index');
+    Route::post('/gestion-categorias', [AdminCategoriaController::class, 'store'])->name('admin.categorias.store');
+    Route::get('/gestion-categorias/{id}', [AdminCategoriaController::class, 'show'])->name('admin.categorias.show');
+    Route::put('/gestion-categorias/{id}', [AdminCategoriaController::class, 'update'])->name('admin.categorias.update');
+    Route::delete('/gestion-categorias/{id}', [AdminCategoriaController::class, 'destroy'])->name('admin.categorias.destroy');
+});
+
+// gestion de ventas
+use App\Http\Controllers\AdminVentaController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/gestion-ventas', [AdminVentaController::class, 'index'])->name('admin.ventas.index');
+    Route::get('/gestion-ventas/{id}', [AdminVentaController::class, 'show'])->name('admin.ventas.show');
+    Route::put('/gestion-ventas/{id}/estado', [AdminVentaController::class, 'updateEstado'])->name('admin.ventas.updateEstado');
+});
+
+// gestion de envios
+use App\Http\Controllers\AdminEnvioController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/gestion-envios', [AdminEnvioController::class, 'index'])->name('admin.envios.index');
+    Route::get('/gestion-envios/{id}', [AdminEnvioController::class, 'show'])->name('admin.envios.show');
+    Route::post('/gestion-envios/{id}/marcar-enviado', [AdminEnvioController::class, 'marcarEnviado'])->name('admin.envios.marcarEnviado');
+    Route::post('/gestion-envios/{id}/marcar-entregado', [AdminEnvioController::class, 'marcarEntregado'])->name('admin.envios.marcarEntregado');
+    Route::put('/gestion-envios/{id}/estado', [AdminEnvioController::class, 'actualizarEstado'])->name('admin.envios.actualizarEstado');
 });

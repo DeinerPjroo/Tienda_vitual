@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $producto->nombre }} - BeLuxe</title>
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
     <link rel="stylesheet" href="{{ asset('css/detalle.css') }}">
@@ -224,6 +225,7 @@
         selectedColor = color;
         document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
         element.classList.add('selected');
+        document.getElementById('selected-color-name').textContent = color;
         updateAvailableSizes();
     }
 
@@ -231,6 +233,7 @@
         selectedSize = size;
         document.querySelectorAll('.size-option').forEach(s => s.classList.remove('selected'));
         element.classList.add('selected');
+        document.getElementById('selected-size-name').textContent = size;
         updateAvailableColors();
     }
 
@@ -296,6 +299,33 @@
     }
 
     function getVariacionId() {
+        console.log('getVariacionId llamado');
+        console.log('selectedColor:', selectedColor);
+        console.log('selectedSize:', selectedSize);
+        
+        // Si no hay colores ni tallas disponibles, retornar la primera variación
+        @if($coloresDisponibles->count() == 0 && $tallasDisponibles->count() == 0)
+            if (variaciones.length > 0) {
+                return variaciones[0].id;
+            }
+            return null;
+        @endif
+        
+        // Si solo hay colores pero no tallas
+        @if($coloresDisponibles->count() > 0 && $tallasDisponibles->count() == 0)
+            if (!selectedColor) return null;
+            const variacion = variaciones.find(v => v.color === selectedColor);
+            return variacion ? variacion.id : null;
+        @endif
+        
+        // Si solo hay tallas pero no colores
+        @if($tallasDisponibles->count() > 0 && $coloresDisponibles->count() == 0)
+            if (!selectedSize) return null;
+            const variacion = variaciones.find(v => v.talla === selectedSize);
+            return variacion ? variacion.id : null;
+        @endif
+        
+        // Si hay ambos, buscar la combinación exacta
         if (!selectedColor || !selectedSize) return null;
         
         const variacion = variaciones.find(v => 
@@ -303,11 +333,17 @@
             v.talla === selectedSize
         );
         
+        console.log('Variación encontrada:', variacion);
         return variacion ? variacion.id : null;
     }
 
     function addToCart() {
-        // Validar que se haya seleccionado color y talla
+        console.log('addToCart llamado');
+        console.log('selectedColor:', selectedColor);
+        console.log('selectedSize:', selectedSize);
+        console.log('variaciones:', variaciones);
+        
+        // Validar que se haya seleccionado color y talla solo si existen opciones
         @if($coloresDisponibles->count() > 0)
             if (!selectedColor) {
                 alert('⚠️ Por favor selecciona un color');
@@ -322,11 +358,31 @@
             }
         @endif
 
-        const quantity = parseInt(document.getElementById('quantity').value);
-        const variacionId = getVariacionId();
+        const quantity = parseInt(document.getElementById('quantity').value) || 1;
+        let variacionId = getVariacionId();
+        
+        console.log('variacionId obtenido:', variacionId);
+        console.log('quantity:', quantity);
 
-        if (!variacionId) {
-            alert('⚠️ La combinación seleccionada no está disponible');
+        // Si hay colores o tallas disponibles, debe haber una variación seleccionada
+        @if($coloresDisponibles->count() > 0 || $tallasDisponibles->count() > 0)
+            if (!variacionId) {
+                alert('⚠️ La combinación seleccionada no está disponible');
+                return;
+            }
+        @else
+            // Si no hay variaciones, usar la primera variación disponible o null
+            const primeraVariacion = variaciones.length > 0 ? variaciones[0].id : null;
+            if (!primeraVariacion) {
+                alert('⚠️ Este producto no tiene variaciones disponibles');
+                return;
+            }
+            variacionId = primeraVariacion;
+        @endif
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]');
+        if (!csrfToken) {
+            alert('❌ Error: Token CSRF no encontrado. Por favor recarga la página.');
             return;
         }
 
@@ -335,7 +391,8 @@
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                'X-CSRF-TOKEN': csrfToken.content,
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 prenda_id: productId,
@@ -343,23 +400,37 @@
                 cantidad: quantity
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message || 'Error en la petición');
+                });
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('Response data:', data);
             if (data.success) {
-                alert(`✅ ${quantity} unidad(es) agregada(s) al carrito\nColor: ${selectedColor}\nTalla: ${selectedSize}`);
+                const mensaje = `✅ ${quantity} unidad(es) agregada(s) al carrito` + 
+                    (selectedColor ? `\nColor: ${selectedColor}` : '') +
+                    (selectedSize ? `\nTalla: ${selectedSize}` : '');
+                alert(mensaje);
                 // Opcional: redirigir al carrito
                 // window.location.href = '/carrito';
             } else {
-                alert('❌ ' + data.message);
+                alert('❌ ' + (data.message || 'Error desconocido'));
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('❌ Error al agregar al carrito');
+            console.error('Error completo:', error);
+            alert('❌ Error al agregar al carrito: ' + error.message);
         });
     }
 
     function buyNow() {
+        console.log('buyNow llamado');
+        
         // Validar selecciones
         @if($coloresDisponibles->count() > 0)
             if (!selectedColor) {
@@ -375,13 +446,62 @@
             }
         @endif
 
-        // Primero agregar al carrito
-        addToCart();
+        const quantity = parseInt(document.getElementById('quantity').value) || 1;
+        let variacionId = getVariacionId();
         
-        // Luego redirigir al carrito después de un momento
-        setTimeout(() => {
-            window.location.href = '/carrito';
-        }, 1000);
+        @if($coloresDisponibles->count() > 0 || $tallasDisponibles->count() > 0)
+            if (!variacionId) {
+                alert('⚠️ La combinación seleccionada no está disponible');
+                return;
+            }
+        @else
+            const primeraVariacion = variaciones.length > 0 ? variaciones[0].id : null;
+            if (!primeraVariacion) {
+                alert('⚠️ Este producto no tiene variaciones disponibles');
+                return;
+            }
+            variacionId = primeraVariacion;
+        @endif
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]');
+        if (!csrfToken) {
+            alert('❌ Error: Token CSRF no encontrado. Por favor recarga la página.');
+            return;
+        }
+
+        // Agregar al carrito y luego redirigir
+        fetch('/carrito/agregar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken.content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                prenda_id: productId,
+                variacion_id: variacionId,
+                cantidad: quantity
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message || 'Error en la petición');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                window.location.href = '/carrito';
+            } else {
+                alert('❌ ' + (data.message || 'Error al agregar al carrito'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('❌ Error al agregar al carrito: ' + error.message);
+        });
     }
 </script>
 </body>

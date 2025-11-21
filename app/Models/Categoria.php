@@ -10,14 +10,14 @@ class Categoria extends Model
     
     protected $fillable = [
         'nombre',
-        'descripcion',
-        'slug',
-        'activo'
+        'descripcion'
     ];
+
+    public $timestamps = true;
 
     // Relación con prendas
     public function prendas()
     {
-        return $this->hasMany(Prenda::class);
+        return $this->hasMany(Prenda::class, 'categoria_id');
     }
 }

@@ -132,13 +132,33 @@ class PedidoController extends Controller
             }
 
             // Crear registro de pago
+            // Si es contraentrega, el pago queda pendiente hasta la entrega
+            // Si es otro método, el pago queda pendiente hasta procesar
+            $estadoPago = 'pendiente';
+            $estadoPedido = 'pendiente';
+            
+            // Si el método de pago es tarjeta, transferencia o PSE, el pedido puede pasar a "pagado" después del pago
+            // Por ahora todos quedan en pendiente hasta que se procese el pago
+            if ($request->metodo_pago === 'contraentrega') {
+                $estadoPago = 'pendiente';
+                $estadoPedido = 'pendiente'; // Se pagará al recibir
+            } else {
+                $estadoPago = 'pendiente'; // Pendiente de procesar
+                $estadoPedido = 'pendiente'; // Cambiará a "pagado" cuando se procese el pago
+            }
+            
             Pago::create([
                 'pedido_id' => $pedido->id,
                 'metodo' => $request->metodo_pago,
                 'monto' => $total,
                 'moneda' => 'COP',
-                'estado' => $request->metodo_pago === 'contraentrega' ? 'pendiente' : 'pendiente'
+                'estado' => $estadoPago
             ]);
+            
+            // Actualizar estado del pedido si es necesario
+            if ($estadoPedido !== 'pendiente') {
+                $pedido->update(['estado' => $estadoPedido]);
+            }
 
             // Vaciar el carrito
             $carrito->items()->delete();
@@ -161,17 +181,16 @@ class PedidoController extends Controller
      * Mostrar confirmación del pedido
      */
     public function confirmacion($id)
-{
-    $usuario = Auth::user();
+    {
+        $usuario = Auth::user();
 
-    $pedido = Pedido::where('id', $id)
-        ->where('usuario_id', $usuario->id)
-        ->firstOrFail();
+        $pedido = Pedido::where('id', $id)
+            ->where('usuario_id', $usuario->id)
+            ->with(['items.variacion.prenda', 'direccion', 'pagos'])
+            ->firstOrFail();
 
-    return redirect()->route('pedidos')
-        ->with('confirmacion', true)
-        ->with('pedido_id', $pedido->id);
-}
+        return view('pedido-confirmacion', compact('pedido'));
+    }
 
 
 
