@@ -87,28 +87,11 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'showForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.store');
 
-// Google OAuth
-Route::get('/login-google', function () {
-    return Socialite::driver('google')->redirect();
-})->name('login.google');
-
-Route::get('/auth/google/callback', function () {
-    $googleUser = Socialite::driver('google')->user();
-
-    $user = \App\Models\User::where('email', $googleUser->getEmail())->first();
-
-    if (!$user) {
-        $user = \App\Models\User::create([
-            'name' => $googleUser->getName() ?? $googleUser->getNickname() ?? 'Usuario',
-            'email' => $googleUser->getEmail(),
-            'password' => \Illuminate\Support\Str::random(24),
-        ]);
-    }
-
-    \Illuminate\Support\Facades\Auth::login($user, true);
-
-    return redirect()->intended(route('dashboard'));
-})->name('login.google.callback');
+// ============================================
+// GOOGLE OAUTH (Login con Google)
+// ============================================
+Route::get('/login-google', [LoginController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('/auth/google/callback', [LoginController::class, 'handleGoogleCallback'])->name('login.google.callback');
 
 // ============================================
 // RUTAS PROTEGIDAS (Requieren Autenticación)

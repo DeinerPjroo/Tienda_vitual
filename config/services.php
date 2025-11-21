@@ -39,7 +39,9 @@ return [
         // Usa las variables de entorno: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_REDIRECT', env('APP_URL') . '/auth/google/callback'),
+        // Si no se especifica GOOGLE_REDIRECT, usa APP_URL + /auth/google/callback
+        // Para XAMPP, asegúrate de que APP_URL incluya la carpeta del proyecto: http://localhost/TIenda_Vitual/public
+        'redirect' => env('GOOGLE_REDIRECT', rtrim(env('APP_URL', 'http://localhost'), '/') . '/auth/google/callback'),
     ],
 
 ];

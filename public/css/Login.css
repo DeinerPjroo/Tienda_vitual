@@ -59,10 +59,17 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
             margin-bottom: 40px;
         }
 
+        .logo-image {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Mantener estilos antiguos por si acaso */
         .logo-icon {
             width: 40px;
             height: 40px;

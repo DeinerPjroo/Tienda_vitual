@@ -1,5 +1,29 @@
+/**
+ * ============================================
+ * GESTIÓN DE PRODUCTOS - FUNCIONES JAVASCRIPT
+ * ============================================
+ * 
+ * Este archivo contiene todas las funciones JavaScript necesarias para:
+ * - Abrir/cerrar modales de crear/editar productos
+ * - Ver detalles de productos
+ * - Eliminar productos
+ * - Aplicar filtros y búsqueda
+ * 
+ * ============================================
+ */
+
 // ===== FUNCIONES PARA MODAL =====
 
+/**
+ * Abre el modal para crear o editar un producto
+ * 
+ * @param {string} mode - Modo del modal: 'create' para crear, 'edit' para editar
+ * @param {number|null} productId - ID del producto a editar (solo necesario en modo 'edit')
+ * 
+ * Funcionalidad:
+ * - Si mode es 'create': Limpia el formulario y lo prepara para crear un nuevo producto
+ * - Si mode es 'edit': Carga los datos del producto desde el servidor y los muestra en el formulario
+ */
 function openModal(mode, productId = null) {
     const modal = document.getElementById('productModal');
     const form = document.getElementById('productForm');
@@ -64,13 +88,23 @@ function openModal(mode, productId = null) {
     }
 }
 
+/**
+ * Cierra el modal de crear/editar producto
+ * 
+ * Resetea el formulario para limpiar todos los campos
+ */
 function closeModal() {
     const modal = document.getElementById('productModal');
     modal.style.display = 'none';
     document.getElementById('productForm').reset();
 }
 
-// Cerrar modal al hacer click fuera
+/**
+ * Cierra el modal cuando se hace click fuera de él
+ * 
+ * Detecta si el click fue en el fondo del modal (no en el contenido)
+ * y lo cierra automáticamente para mejorar la UX
+ */
 window.onclick = function(event) {
     const modal = document.getElementById('productModal');
     if (event.target === modal) {
@@ -80,6 +114,21 @@ window.onclick = function(event) {
 
 // ===== VER PRODUCTO =====
 
+/**
+ * Muestra un modal con los detalles completos de un producto
+ * 
+ * @param {number} productId - ID del producto a mostrar
+ * 
+ * Proceso:
+ * 1. Hace una petición AJAX al servidor para obtener los datos del producto
+ * 2. Construye dinámicamente el HTML del modal con:
+ *    - Información general (nombre, precio, SKU, etc.)
+ *    - Imágenes del producto (con manejo de rutas locales/externas)
+ *    - Variaciones (colores, tallas, stock)
+ * 3. Muestra el modal con toda la información
+ * 
+ * Nota: Las imágenes se muestran con ruta /storage/ para imágenes locales
+ */
 function viewProduct(productId) {
     fetch(`/gestion-productos/${productId}`)
         .then(response => response.json())
@@ -97,19 +146,21 @@ function viewProduct(productId) {
                     document.body.appendChild(viewModal);
                 }
                 
-                // Construir contenido
+                // Construir el HTML para las imágenes del producto
                 let imagenesHtml = '';
                 if (producto.imagenes && producto.imagenes.length > 0) {
                     imagenesHtml = producto.imagenes.map(img => {
-                        // Verificar si la URL es externa o local
+                        // Verificar si la URL es externa (http/https) o local
                         let imageUrl = img.url || '';
                         if (imageUrl && !imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
                             // Si es una URL local, agregar el prefijo /storage/
+                            // Las imágenes se guardan en storage/app/public/productos/
                             imageUrl = '/storage/' + imageUrl;
                         }
                         if (!imageUrl) {
                             return '';
                         }
+                        // Crear un contenedor para cada imagen con estilo y funcionalidad de click
                         return `<div style="flex: 0 0 auto; margin: 5px;">
                             <img src="${imageUrl}" alt="${img.texto_alternativo || producto.nombre}" 
                                  style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; cursor: pointer; display: block;" 
@@ -117,7 +168,7 @@ function viewProduct(productId) {
                                  onclick="window.open('${imageUrl}', '_blank')"
                                  title="Click para ver imagen completa">
                         </div>`;
-                    }).filter(html => html !== '').join('');
+                    }).filter(html => html !== '').join(''); // Filtrar imágenes vacías
                     
                     if (!imagenesHtml) {
                         imagenesHtml = '<p>Sin imágenes disponibles</p>';
@@ -203,6 +254,9 @@ function viewProduct(productId) {
         });
 }
 
+/**
+ * Cierra el modal de detalles del producto
+ */
 function closeViewModal() {
     const modal = document.getElementById('viewProductModal');
     if (modal) {
@@ -212,6 +266,19 @@ function closeViewModal() {
 
 // ===== ELIMINAR PRODUCTO =====
 
+/**
+ * Elimina un producto después de confirmar con el usuario
+ * 
+ * @param {number} productId - ID del producto a eliminar
+ * 
+ * Proceso:
+ * 1. Muestra un diálogo de confirmación
+ * 2. Si el usuario confirma, envía una petición DELETE al servidor
+ * 3. Recarga la página si la eliminación fue exitosa
+ * 4. Muestra un mensaje de error si algo falla
+ * 
+ * IMPORTANTE: Esta acción es irreversible
+ */
 function deleteProduct(productId) {
     if (!confirm('¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.')) {
         return;
@@ -240,33 +307,54 @@ function deleteProduct(productId) {
     });
 }
 
-// ===== LIMPIAR FILTROS =====
+// ===== FILTROS Y BÚSQUEDA =====
 
+/**
+ * Limpia todos los filtros y recarga la página
+ * 
+ * Redirige a la URL base sin parámetros de filtrado
+ */
 function limpiarFiltros() {
     window.location.href = '/gestion-productos';
 }
 
-// ===== APLICAR FILTROS (ya no es necesario si usas el formulario) =====
-
+/**
+ * Aplica los filtros del formulario
+ * 
+ * Envía el formulario de filtros al servidor para aplicar los filtros seleccionados
+ */
 function aplicarFiltros() {
     document.getElementById('filtersForm')?.submit();
 }
 
 // ===== BÚSQUEDA EN TIEMPO REAL =====
 
+/**
+ * Inicializa los eventos de búsqueda y filtrado cuando la página carga
+ * 
+ * Funcionalidades:
+ * 1. Búsqueda con debounce: Espera 500ms después de que el usuario deje de escribir
+ *    antes de enviar la búsqueda (evita demasiadas peticiones al servidor)
+ * 2. Auto-submit de filtros: Cuando se cambia un filtro (categoría, stock, precio),
+ *    se envía automáticamente el formulario
+ */
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     
+    // Configurar búsqueda con debounce (espera 500ms después de escribir)
     if (searchInput) {
         searchInput.addEventListener('input', function(e) {
+            // Limpiar el timeout anterior si existe
             clearTimeout(this.searchTimeout);
+            // Crear un nuevo timeout que enviará el formulario después de 500ms
             this.searchTimeout = setTimeout(() => {
                 document.getElementById('filtersForm')?.submit();
             }, 500);
         });
     }
     
-    // Auto-submit al cambiar filtros
+    // Auto-submit al cambiar cualquier filtro (categoría, stock, precio)
+    // Esto mejora la UX: no necesitas hacer click en "Aplicar Filtros"
     document.querySelectorAll('#filterCategoria, #filterStock, #filterPrecio').forEach(select => {
         select.addEventListener('change', function() {
             document.getElementById('filtersForm')?.submit();

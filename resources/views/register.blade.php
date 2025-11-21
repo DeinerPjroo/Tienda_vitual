@@ -18,8 +18,7 @@
 
         <div class="register-form-section">
             <div class="logo">
-                <div class="logo-icon">BL</div>
-                <span class="logo-text">BeLuxe</span>
+                <img src="{{ asset('images/beluxe-logo.png') }}" alt="BeLuxe Logo" class="logo-image">
             </div>
 
             <h1>Crear Cuenta</h1>
