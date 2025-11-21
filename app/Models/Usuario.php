@@ -136,7 +136,12 @@ class Usuario extends Authenticatable
      */
     public function esAdmin()
     {
-        return $this->rol && $this->rol->nombre === 'admin';
+        // Verificar por rol_id (1 = Administrador) o por nombre del rol
+        return $this->rol_id == 1 || ($this->rol && (
+            $this->rol->nombre === 'Administrador' || 
+            $this->rol->nombre === 'admin' ||
+            strtolower($this->rol->nombre) === 'administrador'
+        ));
     }
 
     /**
@@ -144,7 +149,12 @@ class Usuario extends Authenticatable
      */
     public function esCliente()
     {
-        return $this->rol && $this->rol->nombre === 'cliente';
+        // Verificar por rol_id (2 = Cliente) o por nombre del rol
+        return $this->rol_id == 2 || ($this->rol && (
+            $this->rol->nombre === 'Cliente' || 
+            $this->rol->nombre === 'cliente' ||
+            strtolower($this->rol->nombre) === 'cliente'
+        ));
     }
 
     /**
@@ -165,5 +175,14 @@ class Usuario extends Authenticatable
         return $this->direcciones()
             ->where('predeterminada', 1)
             ->first();
+    }
+
+    /**
+     * Relación con Favoritos
+     * Un usuario tiene muchos favoritos
+     */
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class, 'usuario_id');
     }
 }

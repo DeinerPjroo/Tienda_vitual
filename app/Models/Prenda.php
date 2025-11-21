@@ -90,4 +90,13 @@ class Prenda extends Model
     {
         return $this->variaciones->sum('stock');
     }
+
+    /**
+     * Relación con Favoritos
+     * Una prenda puede estar en muchos favoritos
+     */
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class, 'prenda_id');
+    }
 }

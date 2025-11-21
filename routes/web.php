@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
@@ -21,36 +22,46 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-Route::middleware(['auth'])->group(function () {
+// ============================================
+// RUTAS DE ADMINISTRADOR (Requieren rol admin)
+// ============================================
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    // Panel de administración
+    Route::get('/homeadmin', [App\Http\Controllers\AdminHomeController::class, 'index'])->name('homeadmin');
+    
+    // Gestión de clientes
     Route::get('/gestion-clientes', [AdminUserController::class, 'index'])->name('gestion.clientes');
 });
 
-Route::get('/homeadmin', function () {
-    return view('admin.homeadmin');
-})->name('homeadmin');
+// Favoritos
+Route::middleware(['auth'])->group(function () {
+    Route::get('/favoritos', [App\Http\Controllers\FavoritoController::class, 'index'])->name('favoritos');
+    Route::post('/favoritos/{prendaId}/agregar', [App\Http\Controllers\FavoritoController::class, 'agregar'])->name('favoritos.agregar');
+    Route::delete('/favoritos/{favoritoId}', [App\Http\Controllers\FavoritoController::class, 'eliminar'])->name('favoritos.eliminar');
+    Route::post('/favoritos/{prendaId}/toggle', [App\Http\Controllers\FavoritoController::class, 'toggle'])->name('favoritos.toggle');
+    Route::get('/favoritos/{prendaId}/verificar', [App\Http\Controllers\FavoritoController::class, 'verificar'])->name('favoritos.verificar');
+});
 
-Route::get('/gestion-productos', function () {
-    return view('Admin.GestionDeProductos');
-})->name('gestion.productos');
-
-Route::get('/favoritos', function () {
-    return view('favoritos');
-})->name('favoritos');
-
-Route::get('/hombre', function () {
-    return view('hombre');
+// Rutas de categorías con productos reales
+Route::get('/hombre', function(Request $request) {
+    return app(App\Http\Controllers\CategoriaController::class)->mostrarCategoria($request);
 })->name('hombre');
 
-Route::get('/ninos', function () {
-    return view('ninos');
+Route::get('/ninos', function(Request $request) {
+    return app(App\Http\Controllers\CategoriaController::class)->mostrarCategoria($request);
 })->name('ninos');
 
-Route::get('/accesorios', function () {
-    return view('accesorios');
+Route::get('/niños', function(Request $request) {
+    return app(App\Http\Controllers\CategoriaController::class)->mostrarCategoria($request);
+})->name('ninos-alt');
+
+Route::get('/accesorios', function(Request $request) {
+    return app(App\Http\Controllers\CategoriaController::class)->mostrarCategoria($request);
 })->name('accesorios');
 
-Route::get('/mujer', function () {
-    return view('mujer');
+Route::get('/mujer', function(Request $request) {
+    return app(App\Http\Controllers\CategoriaController::class)->mostrarCategoria($request);
 })->name('mujer');
 
 Route::get('/product', function () {
@@ -115,6 +126,7 @@ Route::middleware(['auth'])->group(function () {
     // Ver y actualizar perfil
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/cambiar-vista', [ProfileController::class, 'cambiarVista'])->name('profile.cambiar-vista');
     
     // Alias adicional para /perfil (español)
     Route::get('/perfil', [ProfileController::class, 'show'])->name('perfil');
@@ -218,7 +230,7 @@ Route::get('/pedido/{id}/factura', [PedidoController::class, 'factura'])->name('
 // gestion de productos 
 use App\Http\Controllers\AdminProductController;
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/gestion-productos', [AdminProductController::class, 'index'])->name('gestion.productos');
     Route::post('/gestion-productos', [AdminProductController::class, 'store'])->name('admin.productos.store');
     Route::get('/gestion-productos/{id}', [AdminProductController::class, 'show'])->name('admin.productos.show');
@@ -228,7 +240,7 @@ Route::middleware(['auth'])->group(function () {
 
 // gestion de usuario 
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Rutas de usuarios
     Route::get('/usuarios', [AdminUserController::class, 'index'])->name('admin.usuarios.index');
     Route::post('/usuarios', [AdminUserController::class, 'store'])->name('admin.usuarios.store');
@@ -241,7 +253,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 // gestion de categorias
 use App\Http\Controllers\AdminCategoriaController;
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/gestion-categorias', [AdminCategoriaController::class, 'index'])->name('admin.categorias.index');
     Route::post('/gestion-categorias', [AdminCategoriaController::class, 'store'])->name('admin.categorias.store');
     Route::get('/gestion-categorias/{id}', [AdminCategoriaController::class, 'show'])->name('admin.categorias.show');
@@ -252,7 +264,7 @@ Route::middleware(['auth'])->group(function () {
 // gestion de ventas
 use App\Http\Controllers\AdminVentaController;
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/gestion-ventas', [AdminVentaController::class, 'index'])->name('admin.ventas.index');
     Route::get('/gestion-ventas/{id}', [AdminVentaController::class, 'show'])->name('admin.ventas.show');
     Route::put('/gestion-ventas/{id}/estado', [AdminVentaController::class, 'updateEstado'])->name('admin.ventas.updateEstado');
@@ -261,7 +273,7 @@ Route::middleware(['auth'])->group(function () {
 // gestion de envios
 use App\Http\Controllers\AdminEnvioController;
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/gestion-envios', [AdminEnvioController::class, 'index'])->name('admin.envios.index');
     Route::get('/gestion-envios/{id}', [AdminEnvioController::class, 'show'])->name('admin.envios.show');
     Route::post('/gestion-envios/{id}/marcar-enviado', [AdminEnvioController::class, 'marcarEnviado'])->name('admin.envios.marcarEnviado');

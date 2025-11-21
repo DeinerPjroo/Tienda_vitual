@@ -60,10 +60,16 @@ class LoginController extends Controller
 
             Log::info('Login exitoso:', ['user_id' => $usuario->id]);
 
-            // Redirigir según el rol
+            // Redirigir según el rol y preferencia de vista
             if ($usuario->rol_id == 1) {
-                return redirect()->route('dashboard')->with('success', '¡Bienvenido de vuelta, ' . $usuario->nombre . '!');
+                // Administrador → Verificar preferencia de vista
+                $vistaPreferida = session('vista_preferida', 'admin');
+                if ($vistaPreferida === 'usuario') {
+                    return redirect()->route('home')->with('success', '¡Bienvenido de vuelta, ' . $usuario->nombre . '!');
+                }
+                return redirect()->route('homeadmin')->with('success', '¡Bienvenido de vuelta, ' . $usuario->nombre . '!');
             } else {
+                // Cliente → Home normal
                 return redirect()->route('home')->with('success', '¡Bienvenido de vuelta, ' . $usuario->nombre . '!');
             }
 

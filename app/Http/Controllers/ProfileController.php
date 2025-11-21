@@ -16,7 +16,35 @@ class ProfileController extends Controller
      */
     public function show()
     {
+        $user = Usuario::find(Auth::id());
+        
+        // Si es administrador, mostrar perfil de admin
+        if ($user->rol_id == 1) {
+            return view('Admin.profile-admin');
+        }
+        
+        // Si es cliente, mostrar perfil normal
         return view('profile');
+    }
+
+    /**
+     * Cambiar vista preferida (admin o usuario)
+     */
+    public function cambiarVista(Request $request)
+    {
+        $request->validate([
+            'vista' => 'required|in:admin,usuario'
+        ]);
+
+        // Guardar preferencia en sesión
+        session(['vista_preferida' => $request->vista]);
+
+        // Redirigir según la vista seleccionada
+        if ($request->vista === 'admin') {
+            return redirect()->route('homeadmin')->with('success', 'Vista de administrador activada');
+        } else {
+            return redirect()->route('home')->with('success', 'Vista de usuario activada');
+        }
     }
 
     /**

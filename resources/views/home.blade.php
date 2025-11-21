@@ -10,6 +10,19 @@
 <body>
     <x-topbar />
 
+    <!-- Mensajes de éxito/error -->
+    @if (session('success'))
+        <div class="alert alert-success" style="background: #d4edda; color: #155724; padding: 15px; margin: 20px; border-radius: 8px; border-left: 4px solid #28a745; text-align: center;">
+            ✅ {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger" style="background: #f8d7da; color: #721c24; padding: 15px; margin: 20px; border-radius: 8px; border-left: 4px solid #dc3545; text-align: center;">
+            ❌ {{ session('error') }}
+        </div>
+    @endif
+
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-content">
@@ -142,7 +155,7 @@
                         👕
                     </div>
                 @endif
-                <button class="wishlist-btn">♡</button>
+                <button class="wishlist-btn" id="favorite-btn-{{ $producto->id }}" onclick="toggleFavorite({{ $producto->id }})" title="Agregar a favoritos">♡</button>
             </div>
             <div class="product-info">
                 @if($producto->categoria_nombre)
@@ -278,12 +291,74 @@
     });
 
     // Funcionalidad para botón de favoritos
-    document.querySelectorAll('.wishlist-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            this.innerHTML = this.innerHTML === '♡' ? '❤️' : '♡';
-        });
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+    // Verificar estado de favoritos al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        @auth
+            const productIds = Array.from(document.querySelectorAll('[id^="favorite-btn-"]'))
+                .map(btn => btn.id.replace('favorite-btn-', ''));
+            
+            if (productIds.length > 0) {
+                productIds.forEach(productId => {
+                    fetch(`/favoritos/${productId}/verificar`, {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const btn = document.getElementById(`favorite-btn-${productId}`);
+                        if (btn && data.is_favorite) {
+                            btn.classList.add('active');
+                            btn.innerHTML = '❤️';
+                            btn.title = 'Eliminar de favoritos';
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            }
+        @endauth
     });
+
+    function toggleFavorite(productId) {
+        @guest
+            alert('Debes iniciar sesión para agregar productos a favoritos');
+            window.location.href = "{{ route('login') }}";
+            return;
+        @endguest
+
+        const btn = document.getElementById(`favorite-btn-${productId}`);
+        
+        fetch(`/favoritos/${productId}/toggle`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.is_favorite) {
+                    btn.classList.add('active');
+                    btn.innerHTML = '❤️';
+                    btn.title = 'Eliminar de favoritos';
+                } else {
+                    btn.classList.remove('active');
+                    btn.innerHTML = '♡';
+                    btn.title = 'Agregar a favoritos';
+                }
+            } else {
+                alert(data.message || 'Error al actualizar favoritos');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al actualizar favoritos');
+        });
+    }
 
     // Función para agregar al carrito
     function addToCart(productId, productName) {
