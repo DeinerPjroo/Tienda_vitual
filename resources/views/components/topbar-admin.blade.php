@@ -29,7 +29,7 @@
         </nav>
 
         <div class="header-actions">
-            <a href="{{ route('carrito.index') }}" class="header-link">🛒 Pedidos</a>
+           
             <a href="{{ route('profile') }}" class="header-link">👤 Cuenta</a>
         </div>
     </div>
