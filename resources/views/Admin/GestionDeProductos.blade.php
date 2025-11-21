@@ -133,9 +133,16 @@
                         <tr>
                             <td>#{{ $producto->id }}</td>
                             <td>
-                                @if ($producto->imagen_url)
-                                    <img src="{{ asset($producto->imagen_url) }}" alt="{{ $producto->nombre }}"
-                                        class="product-image">
+                                @if($producto->imagen_url)
+                                    @if(filter_var($producto->imagen_url, FILTER_VALIDATE_URL))
+                                        <img src="{{ $producto->imagen_url }}" alt="{{ $producto->nombre }}"
+                                            class="product-image"
+                                            onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'width: 60px; height: 60px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px;\'>👕</div>';">
+                                    @else
+                                        <img src="{{ asset('storage/' . $producto->imagen_url) }}" alt="{{ $producto->nombre }}"
+                                            class="product-image"
+                                            onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'width: 60px; height: 60px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px;\'>👕</div>';">
+                                    @endif
                                 @else
                                     <div
                                         style="width: 60px; height: 60px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
@@ -187,13 +194,11 @@
             </table>
 
             <!-- Pagination -->
-            <div class="pagination">
-                <button disabled>← Anterior</button>
-                <button class="active">1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>Siguiente →</button>
-            </div>
+            @if ($productos->hasPages())
+                <div class="pagination-container" style="margin-top: 20px; display: flex; justify-content: center;">
+                    {{ $productos->links() }}
+                </div>
+            @endif
         </div>
     </div>
 

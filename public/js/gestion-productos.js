@@ -100,9 +100,28 @@ function viewProduct(productId) {
                 // Construir contenido
                 let imagenesHtml = '';
                 if (producto.imagenes && producto.imagenes.length > 0) {
-                    imagenesHtml = producto.imagenes.map(img => 
-                        `<img src="/${img.url}" alt="${img.texto_alternativo}" style="width: 100%; max-width: 300px; margin: 10px; border-radius: 8px;">`
-                    ).join('');
+                    imagenesHtml = producto.imagenes.map(img => {
+                        // Verificar si la URL es externa o local
+                        let imageUrl = img.url || '';
+                        if (imageUrl && !imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+                            // Si es una URL local, agregar el prefijo /storage/
+                            imageUrl = '/storage/' + imageUrl;
+                        }
+                        if (!imageUrl) {
+                            return '';
+                        }
+                        return `<div style="flex: 0 0 auto; margin: 5px;">
+                            <img src="${imageUrl}" alt="${img.texto_alternativo || producto.nombre}" 
+                                 style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; cursor: pointer; display: block;" 
+                                 onerror="this.style.display='none';"
+                                 onclick="window.open('${imageUrl}', '_blank')"
+                                 title="Click para ver imagen completa">
+                        </div>`;
+                    }).filter(html => html !== '').join('');
+                    
+                    if (!imagenesHtml) {
+                        imagenesHtml = '<p>Sin imágenes disponibles</p>';
+                    }
                 } else {
                     imagenesHtml = '<p>Sin imágenes</p>';
                 }
@@ -145,7 +164,9 @@ function viewProduct(productId) {
                                 
                                 <div>
                                     <h3>Imágenes</h3>
-                                    ${imagenesHtml}
+                                    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+                                        ${imagenesHtml}
+                                    </div>
                                 </div>
                             </div>
                             

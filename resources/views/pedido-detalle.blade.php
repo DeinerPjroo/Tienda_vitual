@@ -112,9 +112,9 @@
         <a href="{{ route('pedido.rastrear', $pedido->id) }}" class="btn-action btn-track">Rastrear Pedido</a>
     @endif
 
-    <a href="{{ route('pedido.factura', $pedido->id) }}" class="btn-action btn-invoice">Ver Factura</a>
+    
 
-    <a href="{{ route('pedidos') }}" class="checkout-btn">
+    <a href="{{ route('pedidos') }}" class="checkout-btn" style="text-decoration:none;">
                     Volver al Historial
                 </a>
 </div>
